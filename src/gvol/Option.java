@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package gvol;
 
 /**
@@ -12,24 +7,26 @@ package gvol;
 
 
 public class Option {
-    OptionValueType val;
-    String cmd;
-    String Desc;
+    private OptionValueType valType;
+    private String cmd;
+    private String desc;
+    private String value;
     
-    public Option(OptionValueType val,String cmd) {
-        this.val = val;
+    public Option(OptionValueType valType,String cmd) {
+        this.valType = valType;
         this.cmd = cmd;
-        this.Desc = "";
+        this.desc = "";
+        this.value = "";
     }
     
-    public Option(OptionValueType val,String cmd,String Desc) {
-        this.val = val;
+    public Option(OptionValueType valType,String cmd,String desc) {
+        this.valType = valType;
         this.cmd = cmd;
-        this.Desc = Desc;
+        this.desc = desc;
     }
     
     public OptionValueType getValueType(){
-        return val;
+        return valType;
     }
     
     public String getCmd(){
@@ -37,6 +34,14 @@ public class Option {
     }
     
     public String getDesc(){
-        return Desc;
+        return desc;
+    }
+    
+    public void setValue(String value){
+        this.value = value;
+    }
+    
+    public String getValue(){
+        return value;
     }
 }

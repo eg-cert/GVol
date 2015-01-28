@@ -3,10 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Reps/GVol/src/gvol/Option.java</file>
-            <file>file:/D:/Reps/GVol/src/gvol/OptionValueType.java</file>
-            <file>file:/D:/Reps/GVol/src/gvol/MainClass.java</file>
-            <file>file:/D:/Reps/GVol/src/gvol/Profile.java</file>
+            <file>file:/F:/Reps/GVol/src/gvol/OptionValueType.java</file>
+            <file>file:/F:/Reps/GVol/src/gvol/Option.java</file>
+            <file>file:/F:/Reps/GVol/src/gvol/Profile.java</file>
+            <file>file:/F:/Reps/GVol/src/gvol/Plugin.java</file>
+            <file>file:/F:/Reps/GVol/src/gvol/MainClass.java</file>
         </group>
     </open-files>
 </project-private>

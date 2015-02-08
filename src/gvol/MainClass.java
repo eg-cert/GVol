@@ -1,14 +1,13 @@
 package gvol;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import javax.swing.JFrame;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 /**
  *
  * @author Shawkey
@@ -29,12 +28,21 @@ public class MainClass {
             return;
         }
         JFrame mainFrame = new JFrame("GVol");
+        SwingUtilities.invokeLater(new Runnable(){
+
+            @Override
+            public void run() {
+                JFrame frame = new MainFrame(volCommand, plugins, options, profiles);
+                frame.setVisible(true);
+            }
+        
+        });
     }
 
     private static String readConfiguration() {
         List<String> lines;
         try {
-            lines = Files.readAllLines(Paths.get(configFile));
+            lines = Files.readAllLines(Paths.get(configFile),Charset.defaultCharset());
         } catch (IOException ex) {
             return "Cannot read configuration file.";
         }
@@ -64,8 +72,8 @@ public class MainClass {
         return "TRUE";
     }
 
-    private static void showMsg(String res) {
-
+    private static void showMsg(String msg) {
+        JOptionPane.showMessageDialog(null, msg);
     }
 
     private static int readCommand(int it, List<String> lines) {
@@ -88,7 +96,7 @@ public class MainClass {
         int count = -1;
         //read the number of profiles
         while (it < lines.size()) {
-            String line = lines.get(it).trim();
+            String line = lines.get(it++).trim();
             if (line.length() > 0 && line.charAt(0) != '#') {
                 try {
                     count = Integer.parseInt(line);
@@ -97,7 +105,6 @@ public class MainClass {
                 }
                 break;
             }
-            it++;
         }
         if (count < 1) {
             return -1;
@@ -125,7 +132,7 @@ public class MainClass {
         int count = -1;
         //read the number of Options
         while (it < lines.size()) {
-            String line = lines.get(it).trim();
+            String line = lines.get(it++).trim();
             if (line.length() > 0 && line.charAt(0) != '#') {
                 try {
                     count = Integer.parseInt(line);
@@ -133,7 +140,6 @@ public class MainClass {
                 catch (Exception e) {}
                 break;
             }
-            it++;
         }
         if (count < 1) {
             return -1;
@@ -166,7 +172,7 @@ public class MainClass {
         int count = -1;
         //read the number of plugins
         while (it < lines.size()) {
-            String line = lines.get(it).trim();
+            String line = lines.get(it++).trim();
             if (line.length() > 0 && line.charAt(0) != '#') {
                 try {
                     count = Integer.parseInt(line);
@@ -174,7 +180,6 @@ public class MainClass {
                 catch (Exception e) {}
                 break;
             }
-            it++;
         }
         if (count < 1) {
             return -1;

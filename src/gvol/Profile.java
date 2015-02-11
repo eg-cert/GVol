@@ -1,11 +1,10 @@
 package gvol;
 
-/**
- *
- * @author Shawkey
- */
+
 public class Profile {
-    private String name,Desc;
+    
+    private final String Desc;
+    private final String name;
     
     public Profile(String name, String Desc) {
         this.name = name;

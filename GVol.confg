@@ -4,7 +4,7 @@
 #blank lines are ignored too.
 #program command for example "python vol.py"
 
-vol.exe
+cmd /c "E:/ACM CSH.exe"
 
 # profiles in the following format
 # a line containing the number of profiles n, then n lines follow
@@ -15,7 +15,7 @@ Win7SP1x86, Windows 7, service pack 1, 32-bit
 
 # options in the following format 
 # a line containing the number of options n, then n lines follow
-# each line contains "option number, option, Value Type"
+# each line contains "option number, option, description, Value Type"
 # option number should be sorted and ranging from 1 to n.
 # Value Type can be one of the following only (case sensitive)
 # NOVALUE, option doesn't require a value 
@@ -24,8 +24,12 @@ Win7SP1x86, Windows 7, service pack 1, 32-bit
 # NUMBER, option requires a number 
 # DIRECTORY, option requires a path of a directory
 
-1
-1, -p, NUMBER
+5
+1, -p, Process name, NUMBER
+2, -s, output file, FILE
+3, -d, Directory, DIRECTORY
+4, -x , string input, STRING
+5, -vv , -vv, NOVALUE
 
 # plugins in the following format
 # a line containing the number of plugins n, then n lines follow
@@ -33,6 +37,8 @@ Win7SP1x86, Windows 7, service pack 1, 32-bit
 # n is the number of options that can be used with this plugin
 # a1..an are the unique number of each option.
 
-2
+4
+plugin-1, 3,1,2,3
 imageinfo,0
 dlllist, 1,1
+abc , 5, 1,2,3,4,5

@@ -1,22 +1,14 @@
 package gvol;
 
-/**
- *
- * @author Shawkey
- */
-
-
 public class Option {
-    private OptionValueType valType;
-    private String cmd;
-    private String desc;
-    private String value;
+    private final OptionValueType valType;
+    private final String cmd;
+    private final String desc;
     
     public Option(OptionValueType valType,String cmd) {
         this.valType = valType;
         this.cmd = cmd;
         this.desc = "";
-        this.value = "";
     }
     
     public Option(OptionValueType valType,String cmd,String desc) {
@@ -36,12 +28,5 @@ public class Option {
     public String getDesc(){
         return desc;
     }
-    
-    public void setValue(String value){
-        this.value = value;
-    }
-    
-    public String getValue(){
-        return value;
-    }
+     
 }

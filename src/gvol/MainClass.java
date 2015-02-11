@@ -8,10 +8,8 @@ import java.nio.file.Paths;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
-/**
- *
- * @author Shawkey
- */
+
+
 public class MainClass {
 
     static String volCommand;
@@ -24,10 +22,10 @@ public class MainClass {
         String res = readConfiguration();
 
         if (res.compareTo("TRUE") != 0) {
-            showMsg(res);
+            showMessage(res);
             return;
         }
-        JFrame mainFrame = new JFrame("GVol");
+        
         SwingUtilities.invokeLater(new Runnable(){
 
             @Override
@@ -72,7 +70,7 @@ public class MainClass {
         return "TRUE";
     }
 
-    private static void showMsg(String msg) {
+    private static void showMessage(String msg) {
         JOptionPane.showMessageDialog(null, msg);
     }
 
@@ -151,10 +149,10 @@ public class MainClass {
             String line = lines.get(it).trim();
             if (line.length() > 0 && line.charAt(0) != '#') {
                 String [] res = line.split("(\\s)*,(\\s)*", 5);
-                if(res.length != 3) return -1;
+                if(res.length != 4) return -1;
                 try{
                     if(i+1!=Integer.parseInt(res[0]) || res[1].length()<1) return -1;
-                    options[i]=new Option(OptionValueType.valueOf(res[2]),res[1]);
+                    options[i]=new Option(OptionValueType.valueOf(res[3]),res[1],res[2]);
                 }
                 catch(Exception e){return -1;}
                 i++;

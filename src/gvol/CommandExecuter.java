@@ -5,6 +5,8 @@ import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CommandExecuter implements Runnable {
     
@@ -25,7 +27,7 @@ public class CommandExecuter implements Runnable {
         long st,end;
         st = System.currentTimeMillis()/1000;
         String timeStamp = new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime());
-        comLayer.addToConsole("Execution Started at: "+ timeStamp+"\n\n", id);
+        comLayer.addToConsole("Execution Started at: "+ timeStamp+"\r\n\r\n", id);
         try {
             //comLayer.addToConsole(cmd);
             p = Runtime.getRuntime().exec(cmd);
@@ -58,15 +60,20 @@ public class CommandExecuter implements Runnable {
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
-        comLayer.threadClosed(id);
-        isStopped = true;
+        try {
+        } catch (Exception ex) {}
         
         end = System.currentTimeMillis()/1000;
         end -= st;
         timeStamp = new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime());
-            
-        comLayer.addToConsole("\n\nExecution ended at: "+timeStamp, id);
+        comLayer.addToConsole("\r\n\r\nExecution ended at: "+timeStamp, id);
         comLayer.addToConsole("Elapsed time: "+end+" sec.", id);
+        comLayer.threadClosed(id);
+        isStopped = true;
+        
+        
+            
+        
     }
     
     public void setStop(){

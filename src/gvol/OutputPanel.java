@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.text.DefaultCaret;
 
 class OutputPanel extends JPanel implements ActionListener {
 
@@ -57,15 +58,20 @@ class OutputPanel extends JPanel implements ActionListener {
 
     public void appendText(String txt, int id) {
         consoleTextArea.get(id).append(txt);
+        
+        
     }
 
     public void clearText(int id) {
         consoleTextArea.get(id).setText("");
+        
     }
 
     public void addNewTextArea() {
         JTextArea textArea = createTextArea();
         consoleTextArea.add(textArea);
+        DefaultCaret caret = (DefaultCaret)textArea.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         tabsPane.addTab("Tab " + consoleTextArea.size(), new JScrollPane(textArea));
         tabsPane.setSelectedIndex(tabsPane.getTabCount()- 1);
     }

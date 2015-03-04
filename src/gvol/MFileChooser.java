@@ -67,4 +67,17 @@ public class MFileChooser extends JPanel implements ActionListener{
     public void setEnabled(boolean val){
         browseButton.setEnabled(val);
     }
+    
+    public String getFileName(){
+        String filePath = getSelectedFile();
+        if(filePath == null) return null;
+        
+        String fileName="";
+        for(int i=filePath.length()-2;i>=0;i--){
+            if(filePath.charAt(i)=='\\' || filePath.charAt(i)=='/')
+                break;
+            else fileName= filePath.charAt(i)+fileName;
+        }
+        return fileName;
+    }
 }

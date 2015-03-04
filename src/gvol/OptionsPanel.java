@@ -50,7 +50,7 @@ class OptionsPanel extends JPanel implements ActionListener {
                 visible[ind[i]-1]=true;
                 gc.gridx = 1;
                 gc.anchor = GridBagConstraints.WEST;
-                components[ind[i]-1].setEnabled(false);
+                components[ind[i]-1].setEnabled(checkBoxes[ind[i]-1].isSelected());
                 add(components[ind[i]-1], gc);
             }
         }

@@ -10,6 +10,6 @@ package gvol;
  * @author User
  */
 public interface ComLayerWithThread {
-    public void addToConsole(String line);
-    public void threadClosed();
+    public void addToConsole(String line,int id);
+    public void threadClosed(int id);
 }

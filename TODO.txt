@@ -1,0 +1,9 @@
+1- change the configuration file from the GUI
+2- run the same command on multiple input files
+3- run more than one command at a time 
+4- diff between two output files 
+
+
+# Console output ????
+
+

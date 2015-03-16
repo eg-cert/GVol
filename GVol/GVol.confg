@@ -1,0 +1,49 @@
+# this is a comment because it starts with a # character
+    # white spaces are ignored
+
+# blank lines are ignored too.
+
+# first part 
+# program command for example "python vol.py"
+
+"H:/Sleep.exe"
+
+# second part
+# profiles in the following format
+# a line containing the number of profiles n, then n lines follow
+# each line contains "profile name, profile description"
+
+1
+Win7SP1x86, Windows 7, service pack 1, 32-bit
+
+# third part
+# options in the following format 
+# a line containing the number of options n, then n lines follow
+# each line contains "option number, option, description, Value Type"
+# option number should be sorted and ranging from 1 to n.
+# Value Type can be one of the following only (case sensitive)
+# NOVALUE, option doesn't require a value 
+# STRING, option requires a value of type String 
+# FILE, option requires a path of a file 
+# NUMBER, option requires a number 
+# DIRECTORY, option requires a path of a directory
+
+5
+1, -p, Process number, NUMBER
+2, -s, output file, FILE
+3, -d, Directory, DIRECTORY
+4, -x , string input, STRING
+5, -vv , -vv, NOVALUE
+
+# forth part
+# plugins in the following format
+# a line containing the number of plugins n, then n lines follow
+# each line contains "plugin name, n, a1, a2, ...., an"
+# n is the number of options that can be used with this plugin
+# a1..an are the unique number of each option.
+
+4
+plugin-1, 3 ,1,2,3
+imageinfo,0
+dlllist, 1,1
+abc , 5, 1,2,3,4,5

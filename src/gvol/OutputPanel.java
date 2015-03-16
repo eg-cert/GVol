@@ -30,7 +30,7 @@ class OutputPanel extends JPanel implements ActionListener {
         setBorder(BorderFactory.createTitledBorder("Console Output"));
         setLayout(new BorderLayout());
         tabsPane = new JTabbedPane();
-        consoleTextArea = new ArrayList<>();
+        consoleTextArea = new ArrayList<JTextArea>();
         //add(new JScrollPane(consoleTextArea),BorderLayout.CENTER);
         add(tabsPane, BorderLayout.CENTER);
         closeButton = new JButton();

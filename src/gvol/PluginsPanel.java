@@ -8,7 +8,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -145,11 +144,6 @@ class PluginsPanel extends JPanel implements ActionListener {
         cmd = cmd + plugins[pluginsList.getSelectedIndex()].getName()+ " ";
         
         return cmd;
-    }
-    
-    @Deprecated
-    private void setButtonText(String txt){
-        executeButton.setText(txt);
     }
     
     public boolean shouldWriteToFile(){

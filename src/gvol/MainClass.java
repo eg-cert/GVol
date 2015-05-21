@@ -25,7 +25,7 @@ public class MainClass {
             showMessage(res);
             return;
         }
-        
+        DatabaseConn.init();
         SwingUtilities.invokeLater(new Runnable(){
 
             @Override
@@ -195,7 +195,7 @@ public class MainClass {
                       || optionsCount > options.length || res.length != optionsCount+2) 
                         return -1;
                     
-                    plugins[i] = new Plugin(res[0],optionsCount);
+                    plugins[i] = new Plugin(0,res[0],optionsCount);
                     boolean [] taken = new boolean[options.length];
                     for(int j=0;j<options.length;j++) taken[j] = false;
                     for(int j=0;j<optionsCount;j++)

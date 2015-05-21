@@ -1,6 +1,8 @@
 package gvol;
 
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -9,10 +11,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-public class MainFrame extends JFrame {
+public class MainFrame extends JFrame implements ActionListener {
 
     private final String volCommand;
     private final Plugin[] plugins;
@@ -20,13 +25,27 @@ public class MainFrame extends JFrame {
     private final Profile[] profiles;
     private final ArrayList<CommandExecuter> commandExecuter;
     private final ArrayList<OutputStreamWriter> outputFiles;
+     private int ids;
+    final JFrame frame;
     private PluginsPanel pluginsPanel;
     private OptionsPanel optionsPanel;
     private OutputPanel outputPanel;
     private final JPanel mainPanel;
-    private int ids;
-    final JFrame frame;
-
+    
+    private final BatchFileDialog batchFileDialog;
+    private final PluginsDialog pluginsDialog;
+    private final OptionsDialog optionsDialog;
+    private final ProfilesDialog profilesDialog;
+    
+    private final JMenuBar menuBar;
+    private final JMenu fileMenu;
+    private final JMenu configMenu;
+    private final JMenuItem batchMenuItem;
+    private final JMenuItem cmdAndProfilesMenuItem;
+    private final JMenuItem optionsMenuItem;
+    private final JMenuItem pluginsMenuItem;
+    
+    
     public MainFrame(String cmd, Plugin[] plugins, Option[] options, Profile[] profiles) {
         super("GVol - A GUI for Volatility memory forensics tool");
         this.volCommand = cmd;
@@ -36,7 +55,7 @@ public class MainFrame extends JFrame {
         this.ids = 0;
         this.commandExecuter = new ArrayList<CommandExecuter>();
         this.outputFiles = new ArrayList<OutputStreamWriter>();
-        setSize(920, 700);
+        setSize(920, 720);
         this.setResizable(false);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         //setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -48,10 +67,26 @@ public class MainFrame extends JFrame {
         setContentPane(mainPanel);
         mainPanel.setLayout(null);
 
+        menuBar = new JMenuBar();
+        fileMenu = new JMenu();
+        configMenu = new JMenu();
+        
+        batchMenuItem = new JMenuItem();
+        cmdAndProfilesMenuItem = new JMenuItem();
+        optionsMenuItem = new JMenuItem();
+        pluginsMenuItem = new JMenuItem();
+        
+        batchFileDialog = new BatchFileDialog(this);
+        optionsDialog = new OptionsDialog(this);
+        pluginsDialog = new PluginsDialog(this);
+        profilesDialog = new ProfilesDialog(this);
+        
         initOptionsPanel();
         initPluginsPanel();
         initOutputPanel();
-
+        initMenuBar();
+        setJMenuBar(menuBar);
+        setLocationRelativeTo(null);
     }
 
     private void initPluginsPanel() {
@@ -77,6 +112,42 @@ public class MainFrame extends JFrame {
 
     private void showMessage(String msg) {
         JOptionPane.showMessageDialog(this, msg);
+    }
+
+    private void initMenuBar() {
+        fileMenu.setText("File");
+        batchMenuItem.setText("Manage Batch Files...");
+        batchMenuItem.addActionListener(this);
+        fileMenu.add(batchMenuItem);
+        
+        configMenu.setText("Config.");
+        
+        cmdAndProfilesMenuItem.setText("Cmd & Profiles...");
+        cmdAndProfilesMenuItem.addActionListener(this);
+        optionsMenuItem.setText("Volatility Options...");
+        optionsMenuItem.addActionListener(this);
+        pluginsMenuItem.setText("Plugins...");
+        pluginsMenuItem.addActionListener(this);
+        configMenu.add(cmdAndProfilesMenuItem);
+        configMenu.add(optionsMenuItem);
+        configMenu.add(pluginsMenuItem);
+        
+        menuBar.add(fileMenu);
+        menuBar.add(configMenu);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        Object source = ae.getSource();
+        if(source == batchMenuItem)
+            batchFileDialog.setVisible(true);
+        else if(source == cmdAndProfilesMenuItem) 
+            profilesDialog.setVisible(true);
+        else if(source == optionsMenuItem)
+            optionsDialog.setVisible(true);
+        else if(source == pluginsMenuItem)
+            pluginsDialog.setVisible(true);
+               
     }
 
     class PluginPanelCom implements ComLayerWithPluginPanel {
@@ -127,12 +198,12 @@ public class MainFrame extends JFrame {
     }
 
     class CommandExecuterCom implements ComLayerWithThread {
-        
+
         @Override
         public void addToConsole(String line, int id) {
-            
+
             outputPanel.appendText(line + "\n", id);
-            
+
             if (outputFiles.get(id) != null) {
                 try {
                     outputFiles.get(id).write(line + "\r\n");
@@ -141,16 +212,15 @@ public class MainFrame extends JFrame {
                 }
             }
         }
-        
 
         @Override
         public void threadClosed(int id) {
             try {
-               
+
                 outputFiles.get(id).close();
             } catch (Exception ex) {
             }
-            
+
         }
 
     }

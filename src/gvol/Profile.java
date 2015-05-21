@@ -3,19 +3,30 @@ package gvol;
 
 public class Profile {
     
-    private final String Desc;
+    private final String desc;
     private final String name;
+    private final int ID;
     
-    public Profile(String name, String Desc) {
+    public Profile(String name, String desc) {
         this.name = name;
-        this.Desc = Desc;
+        this.desc = desc;
+        ID = 0;
     }
     
-    public String getName(){
+    public Profile(int ID, String name, String desc){
+        this.name = name;
+        this.desc = desc;
+        this.ID = ID;
+    }
+    public String getName() {
         return name;
     }
     
     public String getDescription() {
-        return Desc;
+        return desc;
+    }
+    
+    public int getID(){
+        return ID;
     }
 }

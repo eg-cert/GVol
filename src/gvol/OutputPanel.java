@@ -1,7 +1,6 @@
 package gvol;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -31,7 +30,6 @@ class OutputPanel extends JPanel implements ActionListener {
         setLayout(new BorderLayout());
         tabsPane = new JTabbedPane();
         consoleTextArea = new ArrayList<JTextArea>();
-        //add(new JScrollPane(consoleTextArea),BorderLayout.CENTER);
         add(tabsPane, BorderLayout.CENTER);
         closeButton = new JButton();
         closeButton.setText("Close Current Tab");
@@ -43,7 +41,6 @@ class OutputPanel extends JPanel implements ActionListener {
         JLabel lb = new JLabel();
         lb.setPreferredSize(new Dimension(600,25));
         panel.add(lb);
-        //closeButton.setPreferredSize(new Dimension(200, 25));
         add(panel, BorderLayout.PAGE_END);
         
         

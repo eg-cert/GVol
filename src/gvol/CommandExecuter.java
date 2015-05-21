@@ -4,9 +4,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class CommandExecuter implements Runnable {
     
@@ -27,6 +24,7 @@ public class CommandExecuter implements Runnable {
         long st,end;
         st = System.currentTimeMillis()/1000;
         String timeStamp = new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime());
+        comLayer.addToConsole("Running command: "+cmd + "\r\n",id);
         comLayer.addToConsole("Execution Started at: "+ timeStamp+"\r\n\r\n", id);
         try {
             //comLayer.addToConsole(cmd);

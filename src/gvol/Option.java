@@ -1,22 +1,24 @@
 package gvol;
 
 public class Option {
-    private final OptionValueType valType;
-    private final String cmd;
-    private final String desc;
+    final private OptionValueType valType;
+    final private String cmd;
+    final private String desc;
+    final private int ID;
     
-    public Option(OptionValueType valType,String cmd) {
-        this.valType = valType;
-        this.cmd = cmd;
-        this.desc = "";
-    }
     
     public Option(OptionValueType valType,String cmd,String desc) {
         this.valType = valType;
         this.cmd = cmd;
         this.desc = desc;
+        ID = 0;
     }
-    
+    public Option(int ID, OptionValueType valType,String cmd,String desc) {
+        this.valType = valType;
+        this.cmd = cmd;
+        this.desc = desc;
+        this.ID = ID;
+    }
     public OptionValueType getValueType(){
         return valType;
     }
@@ -29,4 +31,10 @@ public class Option {
         return desc;
     }
      
+    public int getID(){
+        return ID;
+    }
+    
+   
+    
 }

@@ -26,11 +26,14 @@ public class MainClass {
             return;
         }
         DatabaseConn.init();
+//        addConfigToDB();
+//        if (true) return;
+        
         SwingUtilities.invokeLater(new Runnable(){
 
             @Override
             public void run() {
-                JFrame frame = new MainFrame(volCommand, plugins, options, profiles);
+                JFrame frame = new MainFrame();
                 frame.setVisible(true);
             }
         
@@ -216,5 +219,32 @@ public class MainClass {
             it = -1;
         }
         return it;
+    }
+
+    private static void addConfigToDB() {
+        
+        // volCommand;
+        DatabaseConn.setVolCommand(volCommand);
+       
+        //profiles
+        for(Profile p:profiles){
+            DatabaseConn.addProfile(p);
+        }
+        //options
+        for(Option op: options){
+            DatabaseConn.addOption(op);
+        }
+        
+        //plugins 
+        for(int j=0;j<plugins.length;j++){
+            Plugin pl = plugins[j];
+            DatabaseConn.addPlugin(pl);
+            for(int i=0;i<pl.Count();i++)
+            {
+                DatabaseConn.addPluginOption(j+1, pl.getOption(i));
+            }
+        }
+        
+        System.out.println("Done :)");
     }
 }

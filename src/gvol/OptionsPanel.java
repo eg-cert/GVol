@@ -16,101 +16,84 @@ import javax.swing.JTextField;
 
 class OptionsPanel extends JPanel implements ActionListener {
 
-    private final Option[] options;
-    private final JComponent[] components;
-    private final JCheckBox[] checkBoxes;
-    private final boolean [] visible;
-    private final int count;
-    
-    public OptionsPanel(Option[] options) {
+    private JComponent[] components;
+    private JCheckBox[] checkBoxes;
+    private Option [] options;
+    public OptionsPanel() {
         super();
-        this.options = options;
+
         setBorder(BorderFactory.createTitledBorder("Options"));
-        count = options.length;
-        checkBoxes = new JCheckBox[count];
-        components = new JComponent[count];
-        visible = new boolean[count];
-        initComponents();
+        setLayout(new GridBagLayout());
+
     }
 
-    public void updateVisibleOptions(int[] ind) {
+    public void updateVisibleOptions(int pluginID) {
         removeAll();
         GridBagConstraints gc = new GridBagConstraints();
-        for(int i=0;i<count;i++) visible[i]=false;
+        options = DatabaseConn.getPluginOptions(pluginID);
+        checkBoxes = new JCheckBox[options.length];
+        components = new JComponent[options.length];
         gc.gridy = -1;
-        for (int i = 0; i < ind.length; i++) {
-            if (ind[i] >= 1 && ind[i] <= count) {
-                gc.gridx = 0;
-                gc.gridy = gc.gridy++;
-                gc.fill = GridBagConstraints.NONE;
-                gc.anchor = GridBagConstraints.WEST;
-                gc.weightx = gc.weighty = 1;
-                
-                add(checkBoxes[ind[i]-1], gc);
-                visible[ind[i]-1]=true;
-                gc.gridx = 1;
-                gc.anchor = GridBagConstraints.WEST;
-                components[ind[i]-1].setEnabled(checkBoxes[ind[i]-1].isSelected());
-                add(components[ind[i]-1], gc);
-            }
-        }
-        //add code here 
-        revalidate();
-    }
-
-    private void initComponents() {
-        setLayout(new GridBagLayout());
-        GridBagConstraints gc = new GridBagConstraints();
-        JTextField jField;
-        MFileChooser fileChooser;
-
-        for (int i = 0; i < count; i++) {
-            visible[i] = true;
-            checkBoxes[i] = new JCheckBox(options[i].getDesc());
-            checkBoxes[i].addActionListener(this);
+        for (int i = 0; i < options.length; i++) {
             gc.gridx = 0;
-            gc.gridy = i;
+            gc.gridy = gc.gridy++;
             gc.fill = GridBagConstraints.NONE;
             gc.anchor = GridBagConstraints.WEST;
             gc.weightx = gc.weighty = 1;
+
+            initComponents(i);
             add(checkBoxes[i], gc);
-
-            switch (options[i].getValueType()) {
-                case STRING:
-                    jField = new JTextField(14);
-                    components[i] = jField;
-                    break;
-                case NUMBER:
-                    jField = new JTextField(14);
-                    jField.addKeyListener(new NumberValidator());
-                    jField.setPreferredSize(new Dimension(250, 25));
-                    components[i] = jField;
-                    break;
-                case FILE:
-                    fileChooser = new MFileChooser(false);
-                    components[i] = fileChooser;
-                    break;
-                case DIRECTORY:
-                    fileChooser = new MFileChooser(true);
-                    components[i] = fileChooser;
-                    break;
-                case NOVALUE:
-                    components[i] = new JLabel();
-                    break;
-
-            }
             gc.gridx = 1;
             gc.anchor = GridBagConstraints.WEST;
             components[i].setEnabled(false);
             add(components[i], gc);
 
         }
+        //add code here 
+        revalidate();
+    }
+
+    private void initComponents(int ind) {
+
+        GridBagConstraints gc = new GridBagConstraints();
+        JTextField jField;
+        MFileChooser fileChooser;
+
+        checkBoxes[ind] = new JCheckBox(options[ind].getDesc());
+        checkBoxes[ind].addActionListener(this);
+
+        switch (options[ind].getValueType()) {
+            case STRING:
+                jField = new JTextField(14);
+                components[ind] = jField;
+                break;
+            case NUMBER:
+                jField = new JTextField(14);
+                jField.addKeyListener(new NumberValidator());
+                jField.setPreferredSize(new Dimension(250, 25));
+                components[ind] = jField;
+                break;
+            case FILE:
+                fileChooser = new MFileChooser(false);
+                components[ind] = fileChooser;
+                break;
+            case DIRECTORY:
+                fileChooser = new MFileChooser(true);
+                components[ind] = fileChooser;
+                break;
+            case NOVALUE:
+                components[ind] = new JLabel();
+                break;
+
+        }
+        components[ind].setEnabled(false);
+
     }
 
     @Override
     public void actionPerformed(ActionEvent ae) {
         JCheckBox checkBox = (JCheckBox) ae.getSource();
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < checkBoxes.length; i++) {
             if (checkBox == checkBoxes[i]) {
 
                 components[i].setEnabled(checkBox.isSelected());
@@ -135,15 +118,15 @@ class OptionsPanel extends JPanel implements ActionListener {
         }
 
     }
-    
-    public String getComand(){
+
+    public String getComand() {
         String cmd = "";
-        for(int i=0;i<count;i++){
-            if(visible[i] && checkBoxes[i].isSelected()){
-                switch(options[i].getValueType()){
+        for (int i = 0; i < checkBoxes.length; i++) {
+            if (checkBoxes[i].isSelected()) {
+                switch (options[i].getValueType()) {
                     case STRING:
                     case NUMBER:
-                        JTextField jField= (JTextField) components[i];
+                        JTextField jField = (JTextField) components[i];
                         cmd = cmd + " " + options[i].getCmd() + " " + jField.getText();
                         break;
                     case FILE:
@@ -151,38 +134,40 @@ class OptionsPanel extends JPanel implements ActionListener {
                         MFileChooser fileChooser = (MFileChooser) components[i];
                         cmd = cmd + " " + options[i].getCmd() + " " + fileChooser.getSelectedFile();
                         break;
-                        
+
                 }
             }
         }
         return cmd;
     }
-    
-    public boolean hasValidValues(){
-        
-        for(int i=0;i<count;i++){
-            if(visible[i] && checkBoxes[i].isSelected()){
-                switch(options[i].getValueType()){
+
+    public boolean hasValidValues() {
+
+        for (int i = 0; i < options.length; i++) {
+            if (checkBoxes[i].isSelected()) {
+                switch (options[i].getValueType()) {
                     case STRING:
                     case NUMBER:
-                        JTextField jField= (JTextField) components[i];
-                        if(isNullOrWhiteSpace(jField.getText()))
+                        JTextField jField = (JTextField) components[i];
+                        if (isNullOrWhiteSpace(jField.getText())) {
                             return false;
+                        }
                         break;
                     case FILE:
                     case DIRECTORY:
                         MFileChooser fileChooser = (MFileChooser) components[i];
-                        if(isNullOrWhiteSpace(fileChooser.getSelectedFile()))
+                        if (isNullOrWhiteSpace(fileChooser.getSelectedFile())) {
                             return false;
+                        }
                         break;
-                        
+
                 }
             }
         }
         return true;
     }
-    
-    private boolean isNullOrWhiteSpace(String str){
-        return (str==null || str.isEmpty() || str.trim().isEmpty());
+
+    private boolean isNullOrWhiteSpace(String str) {
+        return (str == null || str.isEmpty() || str.trim().isEmpty());
     }
 }

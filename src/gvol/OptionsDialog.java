@@ -166,8 +166,14 @@ public class OptionsDialog extends JDialog implements ActionListener {
         try {
             JButton but = (JButton) source;
             int ID = Integer.parseInt(but.getActionCommand());
-            DatabaseConn.deleteOption(ID);
-            updateOptions();
+            if(DatabaseConn.optionUsed(ID)){
+                JOptionPane.showMessageDialog(this, "Error: this option is used by a plugin.");
+            }
+            else {
+                DatabaseConn.deleteOption(ID);
+                updateOptions();
+            }
+            
         }
         catch(Exception ex){
             System.out.println(ex.getMessage());

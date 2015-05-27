@@ -20,12 +20,9 @@ import javax.swing.JPanel;
 public class MainFrame extends JFrame implements ActionListener {
 
     private final String volCommand;
-    private final Plugin[] plugins;
-    private final Option[] options;
-    private final Profile[] profiles;
     private final ArrayList<CommandExecuter> commandExecuter;
     private final ArrayList<OutputStreamWriter> outputFiles;
-     private int ids;
+    private int ids;
     final JFrame frame;
     private PluginsPanel pluginsPanel;
     private OptionsPanel optionsPanel;
@@ -46,12 +43,10 @@ public class MainFrame extends JFrame implements ActionListener {
     private final JMenuItem pluginsMenuItem;
     
     
-    public MainFrame(String cmd, Plugin[] plugins, Option[] options, Profile[] profiles) {
+    public MainFrame() {
         super("GVol - A GUI for Volatility memory forensics tool");
-        this.volCommand = cmd;
-        this.plugins = plugins;
-        this.options = options;
-        this.profiles = profiles;
+        this.volCommand = DatabaseConn.getVolCommand();
+       
         this.ids = 0;
         this.commandExecuter = new ArrayList<CommandExecuter>();
         this.outputFiles = new ArrayList<OutputStreamWriter>();
@@ -90,14 +85,14 @@ public class MainFrame extends JFrame implements ActionListener {
     }
 
     private void initPluginsPanel() {
-        pluginsPanel = new PluginsPanel(plugins, profiles, new PluginPanelCom());
+        pluginsPanel = new PluginsPanel(new PluginPanelCom());
         Insets insets = mainPanel.getInsets();
         pluginsPanel.setBounds(insets.left + 5, insets.top + 5, 500, 450);
         mainPanel.add(pluginsPanel);
     }
 
     private void initOptionsPanel() {
-        optionsPanel = new OptionsPanel(options);
+        optionsPanel = new OptionsPanel();
         Insets insets = mainPanel.getInsets();
         optionsPanel.setBounds(insets.left + 510, insets.top + 5, 400, 450);
         mainPanel.add(optionsPanel);
@@ -184,12 +179,9 @@ public class MainFrame extends JFrame implements ActionListener {
         }
 
         @Override
-        public void listIndexChanged(int ind) {
-            int[] arr = new int[plugins[ind - 1].Count()];
-            for (int i = 0; i < plugins[ind - 1].Count(); i++) {
-                arr[i] = plugins[ind - 1].getOption(i);
-            }
-            optionsPanel.updateVisibleOptions(arr);
+        public void listIndexChanged(int pluginID) {
+            
+            optionsPanel.updateVisibleOptions(pluginID);
             revalidate();
             repaint();
 

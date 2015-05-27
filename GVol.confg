@@ -13,8 +13,33 @@
 # a line containing the number of profiles n, then n lines follow
 # each line contains "profile name, profile description"
 
-1
-Win7SP1x86, Windows 7, service pack 1, 32-bit
+25
+VistaSP0x64, Windows Vista SP0 x64
+VistaSP0x86, Windows Vista SP0 x86
+VistaSP1x64, Windows Vista SP1 x64
+VistaSP1x86, Windows Vista SP1 x86
+VistaSP2x64, Windows Vista SP2 x64
+VistaSP2x86, Windows Vista SP2 x86
+Win2003SP0x86, Windows 2003 SP0 x86
+Win2003SP1x64, Windows 2003 SP1 x64
+Win2003SP1x86, Windows 2003 SP1 x86
+Win2003SP2x64, Windows 2003 SP2 x64
+Win2003SP2x86, Windows 2003 SP2 x86
+Win2008R2SP0x64, Windows 2008 R2 SP0 x64
+Win2008R2SP1x64, Windows 2008 R2 SP1 x64
+Win2008SP1x64, Windows 2008 SP1 x64
+Win2008SP1x86, Windows 2008 SP1 x86
+Win2008SP2x64, Windows 2008 SP2 x64
+Win2008SP2x86, Windows 2008 SP2 x86
+Win7SP0x64,  Windows 7 SP0 x64
+Win7SP0x86,  Windows 7 SP0 x86
+Win7SP1x64,  Windows 7 SP1 x64
+Win7SP1x86,  Windows 7 SP1 x86
+WinXPSP1x64, Windows XP SP1 x64
+WinXPSP2x64, Windows XP SP2 x64
+WinXPSP2x86, Windows XP SP2 x86
+WinXPSP3x86, Windows XP SP3 x86
+
 
 # third part
 # options in the following format 
@@ -28,12 +53,33 @@ Win7SP1x86, Windows 7, service pack 1, 32-bit
 # NUMBER, option requires a number 
 # DIRECTORY, option requires a path of a directory
 
-5
+23
 1, -p, Process number, NUMBER
 2, -s, output file, FILE
 3, -d, Directory, DIRECTORY
 4, -x , string input, STRING
-5, -vv , -vv, NOVALUE
+5, -v , verbose , NOVALUE
+6, -o, offset, NUMBER
+7, --dump-dir, DumpDir, DIRECTORY
+8, --base,base,NUMBER
+9, -t,OBJECTTYPE,STRING
+10, -s, silent,NOVALUE
+11, -r,REGEX module name,STRING
+12,--ignore-case,ignore-case,NOVALUE
+13,-s,size,NUMBER
+14,-S,save,NOVALUE
+15,--max_history,cmd history,NUMBER
+16,--REDR,redirected links,NOVALUE
+17,--LEAK,deleted entries,NOVALUE
+18,--output,output type ,STRING
+19,-P, Physical address,NOVALUE
+20,--KDBG,Kernel debugger,NUMBER
+21,-t,List of tags,STRING
+22,-T,pooltag file,STRING
+23,-K, key path to print,STRING
+
+
+
 
 # forth part
 # plugins in the following format
@@ -42,8 +88,50 @@ Win7SP1x86, Windows 7, service pack 1, 32-bit
 # n is the number of options that can be used with this plugin
 # a1..an are the unique number of each option.
 
-4
-plugin-1, 3 ,1,2,3
-imageinfo,0
-dlllist, 1,1
-abc , 5, 1,2,3,4,5
+45
+pslist, 0
+psscan, 0
+psxview, 0
+pstree, 0
+dllist, 2 ,1,6
+vadinfo, 2 ,1,6
+vaddump, 4 ,1,6,7,8
+memdump, 3 ,1,6,7
+handles, 4 ,1,6,9,10 
+getsids, 2 ,1,6
+envars, 2 ,1,6
+moddump, 4 ,1,7,8,11
+dlldump, 6 ,1,6,7,8,11,12
+malfind, 3 ,1,6,7
+ldrmodules,1,5
+impscan, 3 ,1,8,13
+evtlogs,3 , 5,7,14
+cmdscan, 0
+consoles,0
+iehistory,5 , 1,6,16,17,18
+svcscan,1,5
+connections,0
+sockets,0
+connscan,0
+sockscan,0
+netscan,0
+modules,2,19,20
+modscan,0
+unloadedmodules,0
+timers,0
+callbacks,0
+ssdt,1,5
+idt,1,5
+gdt,0
+driverirp,2,5,11
+devicetree,0
+driverscan,0
+mutantscan,1,10
+filescan,0
+symlinkscan,0
+hivelist,0
+printkey,2,6,23
+userassist,0
+shallbags,0
+shimcache,0
+

@@ -28,12 +28,12 @@ class PluginsPanel extends JPanel implements ActionListener {
     private final JCheckBox writeFileBox;
     private final MFileChooser outputDirChooser;
     
-    public PluginsPanel(Plugin[] plugins, Profile[] profiles, ComLayerWithPluginPanel comLayer) {
+    public PluginsPanel(ComLayerWithPluginPanel comLayer) {
         super();
         setBorder(BorderFactory.createTitledBorder("Plugins"));
 
-        this.plugins = plugins;
-        this.profiles = profiles;
+        this.plugins = DatabaseConn.getPlugins();
+        this.profiles = DatabaseConn.getProfiles();
         this.comLayer = comLayer;
         imageLabel = new JLabel();
         profileLabel = new JLabel();
@@ -52,7 +52,8 @@ class PluginsPanel extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(pluginsList == e.getSource()){
-            comLayer.listIndexChanged(pluginsList.getSelectedIndex()+1);
+            ComboBoxItem cbi = (ComboBoxItem) pluginsList.getSelectedItem();
+            comLayer.listIndexChanged(cbi.getID());
         }
         else if(executeButton == e.getSource()){
             comLayer.buttonClicked();
@@ -72,16 +73,16 @@ class PluginsPanel extends JPanel implements ActionListener {
         outputDirChooser.setEnabled(false);
         writeFileBox.addActionListener(this);
         for (Profile profile : profiles) {
-            profilesList.addItem(profile.getDescription());
+            profilesList.addItem(new ComboBoxItem(profile.getID(), profile.getDescription()));
         }
-        
+        int first = -1;
         for(Plugin plugin : plugins){
-            pluginsList.addItem(plugin.getName());
+            if(first == -1) first = plugin.getID();
+            pluginsList.addItem(new ComboBoxItem(plugin.getID(), plugin.getName()));
         }
         
         pluginsList.addActionListener(this);
-        pluginsList.setSelectedIndex(0);
-        comLayer.listIndexChanged(1);
+        comLayer.listIndexChanged(first);
         
         executeButton.addActionListener(this);
         executeButton.setText("Run Command");
@@ -139,9 +140,13 @@ class PluginsPanel extends JPanel implements ActionListener {
         //input image 
         cmd = "-f "+fileChooser.getSelectedFile()+" ";
         //profile
-        cmd = cmd + "--profile=" + profiles[profilesList.getSelectedIndex()].getName()+" ";
+        ComboBoxItem cbi = (ComboBoxItem) profilesList.getSelectedItem();
+        Profile p = DatabaseConn.getProfile(cbi.getID());
+        cmd = cmd + "--profile=" + p.getName()+" ";
         //plugin 
-        cmd = cmd + plugins[pluginsList.getSelectedIndex()].getName()+ " ";
+        cbi = (ComboBoxItem) pluginsList.getSelectedItem();
+        Plugin pl = DatabaseConn.getPlugin(cbi.getID());
+        cmd = cmd + pl.getName()+ " ";
         
         return cmd;
     }
@@ -152,7 +157,9 @@ class PluginsPanel extends JPanel implements ActionListener {
     }
     
     public String getFileName(){
-        return fileChooser.getFileName()+"-"+plugins[pluginsList.getSelectedIndex()].getName()+"-output";
+        ComboBoxItem cbi = (ComboBoxItem) pluginsList.getSelectedItem();
+        Plugin pl = DatabaseConn.getPlugin(cbi.getID());
+        return fileChooser.getFileName()+"-"+pl.getName()+"-output";
     }
     
     public String getOutputDir(){

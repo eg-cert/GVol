@@ -1,6 +1,5 @@
 package gvol;
 
-import java.awt.GridBagConstraints;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -223,6 +222,22 @@ public class DatabaseConn {
        return plugins;
     }
     
+    public static Profile getProfile(int id) {
+        Profile [] profiles = getProfiles();
+        for(Profile p:profiles){
+            if(p.getID() == id) return p;
+        }
+        return null;
+    }
+
+    public static Plugin getPlugin(int id) {
+        Plugin [] plugins = getPlugins();
+        for(Plugin p:plugins){
+            if(id == p.getID()) return p;
+        }
+        return null;
+    }
+    
     public static void setVolCommand(String newCmd) {
         String sql = "delete from volcommand;";
         try {
@@ -380,9 +395,17 @@ public class DatabaseConn {
         }
         return false;
     }
-
     
-
-    
+    public static boolean optionUsed(int optionID){
+        String sql = "select * from pluginOption where optionID = "+ ((Integer) optionID).toString();
+        try {
+            Statement stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            return rs.next();
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+        return false;
+    }
 
 }

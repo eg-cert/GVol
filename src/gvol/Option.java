@@ -7,12 +7,6 @@ public class Option {
     final private int ID;
     
     
-    public Option(OptionValueType valType,String cmd,String desc) {
-        this.valType = valType;
-        this.cmd = cmd;
-        this.desc = desc;
-        ID = 0;
-    }
     public Option(int ID, OptionValueType valType,String cmd,String desc) {
         this.valType = valType;
         this.cmd = cmd;

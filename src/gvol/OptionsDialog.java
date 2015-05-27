@@ -157,7 +157,7 @@ public class OptionsDialog extends JDialog implements ActionListener {
             return;
         }
 
-        Option op = new Option(OptionValueType.valueOf((String) typeComboBox.getSelectedItem()), name, desc);
+        Option op = new Option(0,OptionValueType.valueOf((String) typeComboBox.getSelectedItem()), name, desc);
         DatabaseConn.addOption(op);
         updateOptions();
     }

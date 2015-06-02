@@ -19,6 +19,7 @@ class OptionsPanel extends JPanel implements ActionListener {
     private JComponent[] components;
     private JCheckBox[] checkBoxes;
     private Option [] options;
+    
     public OptionsPanel() {
         super();
 
@@ -119,7 +120,7 @@ class OptionsPanel extends JPanel implements ActionListener {
 
     }
 
-    public String getComand() {
+    public String getCommand() {
         String cmd = "";
         for (int i = 0; i < checkBoxes.length; i++) {
             if (checkBoxes[i].isSelected()) {

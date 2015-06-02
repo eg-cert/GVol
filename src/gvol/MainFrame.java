@@ -19,7 +19,7 @@ import javax.swing.JPanel;
 
 public class MainFrame extends JFrame implements ActionListener {
 
-    private final String volCommand;
+    private String volCommand;
     private final ArrayList<CommandExecuter> commandExecuter;
     private final ArrayList<OutputStreamWriter> outputFiles;
     private int ids;
@@ -142,7 +142,8 @@ public class MainFrame extends JFrame implements ActionListener {
             optionsDialog.setVisible(true);
         else if(source == pluginsMenuItem)
             pluginsDialog.setVisible(true);
-               
+        pluginsPanel.updateComponents();
+        volCommand = DatabaseConn.getVolCommand();
     }
 
     class PluginPanelCom implements ComLayerWithPluginPanel {
@@ -156,8 +157,23 @@ public class MainFrame extends JFrame implements ActionListener {
                 showMessage("you must specify an input image file or output directory.");
                 return;
             }
-
-            String cmd = "cmd /c \"" + volCommand + " " + pluginsPanel.getComand() + " " + optionsPanel.getComand() + "\"";
+            String [] cmd = pluginsPanel.getCommands();
+            
+            if(pluginsPanel.shouldAddToBatchFile()){
+                if(pluginsPanel.addToBatchFile(cmd[0]+" "+optionsPanel.getCommand())){
+                    showMessage("Command added successfully.");
+                }
+                else{
+                    showMessage("Failed to add command.");
+                }
+                return;
+            }
+            
+            //String cmd = "cmd /c \"" + volCommand + " " + pluginsPanel.getCommand() + " " + optionsPanel.getCommand() + "\"";
+            String optionsCmd = optionsPanel.getCommand();
+            for(int i=0;i<cmd.length;i++){
+                cmd[i] = "cmd /c \"" + volCommand + " " + cmd[i] + " " + optionsCmd + "\"";
+            }
             commandExecuter.add(new CommandExecuter(cmd, new CommandExecuterCom(), ids++));
             outputPanel.addNewTextArea();
             OutputStreamWriter out = null;

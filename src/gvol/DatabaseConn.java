@@ -23,32 +23,32 @@ public class DatabaseConn {
     }
 
     public static int commandsCount(int batchFileID) {
-        return getCount("command","where batchfileid = " + ((Integer) batchFileID).toString());
+        return getCount("command", "where batchfileid = " + ((Integer) batchFileID).toString());
     }
 
     public static int profilesCount() {
-        return getCount("profile",null);
+        return getCount("profile", null);
     }
 
     public static int batchFileCount() {
-        return getCount("batchfile",null);
+        return getCount("batchfile", null);
     }
 
     public static int optionsCount() {
-        return getCount("option",null);
+        return getCount("option", null);
     }
-    
+
     private static int pluginsCount() {
-        return getCount("plugin",null);
+        return getCount("plugin", null);
     }
-    
-    private static int pluginOptionsCount(int pluginID){
-        return getCount("pluginOption","where pluginID = "+((Integer)pluginID).toString());
+
+    private static int pluginOptionsCount(int pluginID) {
+        return getCount("pluginOption", "where pluginID = " + ((Integer) pluginID).toString());
     }
-    
+
     private static int getCount(String tableName, String where) {
-        String sql = "select count(*) from " + tableName +" "+ ((where==null)?"":where)+";";
-        
+        String sql = "select count(*) from " + tableName + " " + ((where == null) ? "" : where) + ";";
+
         try {
             Statement stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
@@ -60,7 +60,7 @@ public class DatabaseConn {
         }
         return 0;
     }
-    
+
     public static BatchFile[] getBatchFiles() {
         BatchFile[] batchFiles = new BatchFile[batchFileCount()];
         String sql = "select * from batchfile order by name;";
@@ -69,9 +69,7 @@ public class DatabaseConn {
             ResultSet rs = stmt.executeQuery(sql);
             int i = 0;
             while (rs.next()) {
-                batchFiles[i] = new BatchFile();
-                batchFiles[i].ID = rs.getInt("id");
-                batchFiles[i].Name = rs.getString("name");
+                batchFiles[i] = new BatchFile(rs.getInt("id"), rs.getString("name"));
                 i++;
             }
             stmt.close();
@@ -151,10 +149,10 @@ public class DatabaseConn {
         return options;
     }
 
-    private static Option getOption(int optionID){
+    private static Option getOption(int optionID) {
         Option option = null;
         String sql = "select * from option where ID = ";
-        sql += ((Integer)optionID).toString() + " order by name;";
+        sql += ((Integer) optionID).toString() + " order by name;";
         int ID;
         String name;
         String desc;
@@ -168,7 +166,7 @@ public class DatabaseConn {
                 desc = rs.getString("desc");
                 type = rs.getString("type");
                 option = new Option(ID, OptionValueType.valueOf(type), name, desc);
-                
+
             }
             stmt.close();
         } catch (Exception ex) {
@@ -176,12 +174,12 @@ public class DatabaseConn {
         }
         return option;
     }
-    
-    public static Option[] getPluginOptions(int PluginID){
+
+    public static Option[] getPluginOptions(int PluginID) {
         Option[] options = new Option[pluginOptionsCount(PluginID)];
         String sql = "select * from pluginoption ";
-        sql += "where pluginID = " +((Integer)PluginID).toString()+";";
-        
+        sql += "where pluginID = " + ((Integer) PluginID).toString() + ";";
+
         int optionID;
         try {
             Statement stmt = c.createStatement();
@@ -198,10 +196,10 @@ public class DatabaseConn {
         }
         return options;
     }
-    
+
     public static Plugin[] getPlugins() {
-       Plugin [] plugins = new Plugin[pluginsCount()];
-       String sql = "select * from plugin order by name;";
+        Plugin[] plugins = new Plugin[pluginsCount()];
+        String sql = "select * from plugin order by name;";
         int ID;
         String name;
         try {
@@ -212,32 +210,62 @@ public class DatabaseConn {
                 ID = rs.getInt("id");
                 name = rs.getString("name");
                 Option[] options = getPluginOptions(ID);
-                plugins[i] = new Plugin(ID,  name, options);
+                plugins[i] = new Plugin(ID, name, options);
                 i++;
             }
             stmt.close();
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
         }
-       return plugins;
+        return plugins;
     }
     
+    public static Command[] getCommands(int batchFileID) {
+        Command [] commands = new Command[commandsCount(batchFileID)];
+        String sql = "select * from command ";
+        sql += "where batchFileID = " + batchFileID + ";";
+
+        int ID;
+        String text;
+        int bID;
+        try {
+            Statement stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            int i = 0;
+            while (rs.next()) {
+                ID = rs.getInt("ID");
+                bID = rs.getInt("batchFileID");
+                text =rs.getString("text");
+                commands[i] = new Command(ID,text,bID);
+                i++;
+            }
+            stmt.close();
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+        return commands;
+    }
+
     public static Profile getProfile(int id) {
-        Profile [] profiles = getProfiles();
-        for(Profile p:profiles){
-            if(p.getID() == id) return p;
+        Profile[] profiles = getProfiles();
+        for (Profile p : profiles) {
+            if (p.getID() == id) {
+                return p;
+            }
         }
         return null;
     }
 
     public static Plugin getPlugin(int id) {
-        Plugin [] plugins = getPlugins();
-        for(Plugin p:plugins){
-            if(id == p.getID()) return p;
+        Plugin[] plugins = getPlugins();
+        for (Plugin p : plugins) {
+            if (id == p.getID()) {
+                return p;
+            }
         }
         return null;
     }
-    
+
     public static void setVolCommand(String newCmd) {
         String sql = "delete from volcommand;";
         try {
@@ -266,7 +294,7 @@ public class DatabaseConn {
 
     public static void addOption(Option op) {
         String sql = "insert into option (name,[desc],[type]) values('" + op.getCmd() + "'";
-        sql = sql + ",'" + op.getDesc() + "','"+op.getValueType().toString()+"');";
+        sql = sql + ",'" + op.getDesc() + "','" + op.getValueType().toString() + "');";
         try {
             Statement stmt = c.createStatement();
             stmt.executeUpdate(sql);
@@ -278,8 +306,8 @@ public class DatabaseConn {
     }
 
     public static void addPlugin(Plugin p) {
-        String sql = "insert into plugin (name) values('" + p.getName()+ "');";
-       
+        String sql = "insert into plugin (name) values('" + p.getName() + "');";
+
         try {
             Statement stmt = c.createStatement();
             stmt.executeUpdate(sql);
@@ -289,10 +317,10 @@ public class DatabaseConn {
             System.out.println(ex.getMessage());
         }
     }
-     
+
     public static void addPluginOption(int pluginID, int optionID) {
-         String sql = "insert into pluginOption (pluginID,optionID) values(" + ((Integer)pluginID).toString()+ ",";
-         sql += ((Integer) optionID).toString()+");";
+        String sql = "insert into pluginOption (pluginID,optionID) values(" + ((Integer) pluginID).toString() + ",";
+        sql += ((Integer) optionID).toString() + ");";
         try {
             Statement stmt = c.createStatement();
             stmt.executeUpdate(sql);
@@ -302,7 +330,32 @@ public class DatabaseConn {
             System.out.println(ex.getMessage());
         }
     }
-    
+
+    public static void addBatchFile(BatchFile batchFile) {
+        String sql = "insert into batchFile (name) values('" + batchFile.getName() + "');";
+        try {
+            Statement stmt = c.createStatement();
+            stmt.executeUpdate(sql);
+
+            stmt.close();
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    public static void addCommand(Command command) {
+        String sql = "insert into command (text,batchFileID) values('" + command.getCmd() + "', "+command.getBatchFileID() +");";
+        try {
+            Statement stmt = c.createStatement();
+            stmt.executeUpdate(sql);
+
+            stmt.close();
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+     
     public static void deleteProfile(int ID) {
         String sql = "delete from profile where id =" + ((Integer) ID).toString();
         try {
@@ -328,26 +381,26 @@ public class DatabaseConn {
     }
 
     public static void deletePlugin(int pluginID) {
-        String [] sql= new String[2];
-        sql[0]= "delete from plugin where id = " + ((Integer)pluginID).toString();
-        sql[1] = "delete from PluginOption where PluginID = "+ ((Integer)pluginID).toString();
-        
-        for(int i=1;i>=0;i--){
+        String[] sql = new String[2];
+        sql[0] = "delete from plugin where id = " + ((Integer) pluginID).toString();
+        sql[1] = "delete from PluginOption where PluginID = " + ((Integer) pluginID).toString();
+
+        for (int i = 1; i >= 0; i--) {
             try {
                 Statement stmt = c.createStatement();
                 stmt.executeUpdate(sql[i]);
 
                 stmt.close();
             } catch (Exception ex) {
-                System.out.println("delete Plugin: "+ex.getMessage());
+                System.out.println("delete Plugin: " + ex.getMessage());
             }
         }
     }
-       
+
     public static void deletePluginOption(int pluginID, int optionID) {
         String sql = "delete from PluginOption where PluginID =";
         sql += ((Integer) pluginID).toString();
-        sql += " and optionID = " +((Integer)optionID).toString();
+        sql += " and optionID = " + ((Integer) optionID).toString();
         try {
             Statement stmt = c.createStatement();
             stmt.executeUpdate(sql);
@@ -358,8 +411,38 @@ public class DatabaseConn {
         }
     }
     
-    public static boolean profileExists(String name) {
-        String sql = "select * from profile where name ='" + name.trim() + "';";
+    public static void deleteCommand(int commandID) {
+        String sql = "delete from command where ID =";
+        sql += commandID;
+        
+        try {
+            Statement stmt = c.createStatement();
+            stmt.executeUpdate(sql);
+
+            stmt.close();
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    public static void deleteBatchFile(int batchFileID) {
+        String [] sql = new String[2];
+        sql[0] = "delete from command where batchFileID = "+batchFileID;
+        sql[1] = "delete from batchFile where ID = "+batchFileID;
+        for(int i=0;i<2;i++){
+            try {
+                Statement stmt = c.createStatement();
+                stmt.executeUpdate(sql[i]);
+
+                stmt.close();
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+    }
+
+    public static boolean profileExists(String profileName) {
+        String sql = "select * from profile where name ='" + profileName.trim() + "';";
         try {
             Statement stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
@@ -369,7 +452,7 @@ public class DatabaseConn {
         }
         return false;
     }
-    
+
     public static boolean pluginExists(String pluginName) {
         String sql = "select * from plugin where name ='" + pluginName.trim() + "';";
         try {
@@ -383,9 +466,9 @@ public class DatabaseConn {
     }
 
     public static boolean pluginOptionExists(int pluginID, int optionID) {
-       String sql = "select * from pluginOption where pluginID =";
-       sql += ((Integer)pluginID).toString();
-       sql += " and optionID = "+ ((Integer) optionID).toString();
+        String sql = "select * from pluginOption where pluginID =";
+        sql += ((Integer) pluginID).toString();
+        sql += " and optionID = " + ((Integer) optionID).toString();
         try {
             Statement stmt = c.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
@@ -395,17 +478,33 @@ public class DatabaseConn {
         }
         return false;
     }
+
+    public static boolean batchFileExists(String batchFileName) {
+        String sql = "select * from batchFile where name ='" + batchFileName.trim() + "';";
+        try {
+            Statement stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            return rs.next();
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+        return false;
+    }
+
+    public static boolean optionUsed(int optionID) {
+        String sql = "select * from pluginOption where optionID = " + ((Integer) optionID).toString();
+        try {
+            Statement stmt = c.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+            return rs.next();
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+        return false;
+    }
+
+   
     
-    public static boolean optionUsed(int optionID){
-        String sql = "select * from pluginOption where optionID = "+ ((Integer) optionID).toString();
-        try {
-            Statement stmt = c.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            return rs.next();
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }
-        return false;
-    }
+    
 
 }

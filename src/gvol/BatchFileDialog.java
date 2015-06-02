@@ -3,9 +3,13 @@
  */
 package gvol;
 
-import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,166 +17,228 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.UIManager;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableCellRenderer;
+import javax.swing.JTextField;
+import javax.swing.border.TitledBorder;
 
 public class BatchFileDialog extends JDialog implements ActionListener {
 
     private final JPanel batchPanel;
     private final JPanel commandsPanel;
-    private final JTable batchTable;
-    private final AbstractTableModel batchModel;
-    private final JTable commandsTable;
-    private final AbstractTableModel commandsModel;
+    private final JPanel addBatchPanel;
+    private final JLabel nameLabel;
+    private final JTextField nameTextField;
+    private final JButton addBatchButton;
+
     private final JButton doneButton;
-    private final BatchFileDialog dialog;
     private int selectedFileID;
 
     public BatchFileDialog(JFrame parent) {
         super(parent, true);
-        setSize(new Dimension(620, 480));
+        setSize(new Dimension(620, 580));
         setLayout(null);
         setLocationRelativeTo(parent);
 
         batchPanel = new JPanel();
         commandsPanel = new JPanel();
-
-        batchModel = new BatchModel();
-        commandsModel = new CommandsModel();
-        batchTable = new JTable(batchModel);
-        commandsTable = new JTable(commandsModel);
-        doneButton = new JButton();
-        dialog=this;
+        addBatchPanel = new JPanel();
+        nameLabel = new JLabel("Name: ");
+        nameTextField = new JTextField(15);
+        addBatchButton = new JButton("Add");
         selectedFileID = 0;
-        doneButton.setText("Done");
-        doneButton.addActionListener(this);
-
-        Insets insets = this.getInsets();
-        doneButton.setBounds(insets.left + 350, insets.top + 390, 100, 30);
-        add(doneButton);
 
         initBatchPanel();
+        initAddBatchPanel();
         initCommandsPanel();
+
+        doneButton = new JButton("Done");
+        doneButton.addActionListener(this);
+        Insets insets = this.getInsets();
+        doneButton.setBounds(insets.left + 500, insets.top + 490, 80, 25);
+        add(doneButton);
+
     }
 
     private void initBatchPanel() {
-        batchTable.getColumn(batchTable.getColumnName(1)).setCellRenderer(new ButtonRenderer());
-        batchPanel.setLayout(new BorderLayout());
-        batchPanel.setBorder(BorderFactory.createTitledBorder("Batch Files"));
-        batchPanel.add(new JScrollPane(batchTable));
+        JScrollPane scrollPane = new JScrollPane(batchPanel);
         Insets insets = this.getInsets();
-        batchPanel.setBounds(insets.left + 5, insets.top + 5, 290, 380);
-        add(batchPanel);
+        scrollPane.setBorder(new TitledBorder("Batch Files"));
+        scrollPane.setBounds(insets.left + 5, insets.top + 5, 590, 200);
+        add(scrollPane);
+        selectedFileID = -1;
+        updateBatches();
+    }
+     
+    private void initAddBatchPanel() {
+        Insets insets = this.getInsets();
+        addBatchPanel.setBounds(insets.left+5,insets.top+210,590,60);
+        addBatchPanel.setLayout(new FlowLayout());
+        addBatchPanel.setBorder(BorderFactory.createTitledBorder("Add new batch file"));
+        add(addBatchPanel);
+        
+        addBatchButton.addActionListener(this);
+        
+        addBatchPanel.add(nameLabel);
+        addBatchPanel.add(nameTextField);
+        addBatchPanel.add(addBatchButton);
+    }
+    
+    private void initCommandsPanel() {
+        JScrollPane scrollPane = new JScrollPane(commandsPanel);
+        Insets insets = this.getInsets();
+        
+        scrollPane.setBorder(new TitledBorder("Selected batch file commands"));
+        
+        scrollPane.setBounds(insets.left + 5, insets.top + 275, 590, 200);
+        add(scrollPane);
+        
+        updateCommands();
+        
     }
 
-    private void initCommandsPanel() {
-        commandsPanel.setLayout(new BorderLayout());
-        commandsPanel.setBorder(BorderFactory.createTitledBorder("Commands"));
-        commandsPanel.add(new JScrollPane(commandsTable));
-        Insets insets = this.getInsets();
-        commandsPanel.setBounds(insets.left + 305, insets.top + 5, 290, 380);
-        add(commandsPanel);
+    private void updateBatches() {
+        BatchFile[] batches = DatabaseConn.getBatchFiles();
+        batchPanel.removeAll();
+        batchPanel.setLayout(new GridLayout(Math.max(batches.length,9),3,1,1));
+        
+        for (BatchFile batchFile : batches) {
+            JLabel label = new JLabel(batchFile.getName());
+            if (batchFile.getID() == selectedFileID) {
+                label.setOpaque(true);
+                label.setBackground(Color.BLUE);
+                label.setForeground(Color.WHITE);
+            }
+            batchPanel.add(label);
+            JButton selectButton = new JButton("Select");
+            selectButton.setActionCommand("select:" + batchFile.getID());
+            selectButton.addActionListener(this);
+            batchPanel.add(selectButton);
+            JButton deleteButton = new JButton("Delete");
+            deleteButton.setActionCommand("delete:" + batchFile.getID());
+            deleteButton.addActionListener(this);
+            batchPanel.add(deleteButton); 
+        }
+        for(int i=0; i<(9-batches.length)*3;i++){
+            batchPanel.add(new JLabel());
+            
+        }
+        revalidate();
+        repaint();
+        
+    }
+
+    private void updateCommands() {
+        Command [] commands = DatabaseConn.getCommands(selectedFileID);
+        commandsPanel.removeAll();
+        commandsPanel.setLayout(new GridBagLayout());
+        GridBagConstraints gc = new GridBagConstraints();
+        gc.fill = GridBagConstraints.NONE;
+        gc.anchor = GridBagConstraints.WEST;
+        gc.weighty = 1;
+        gc.gridy = 0 ;
+        for(Command command:commands){
+            JLabel label = new JLabel(command.getCmd());
+            gc.weightx = 4;
+            gc.gridx = 0;
+            commandsPanel.add(label,gc);
+            
+            JButton button = new JButton("Remove");
+            button.addActionListener(this);
+            button.setActionCommand("remove:"+command.getID());
+            gc.weightx = 1;
+            gc.gridx = 1;
+            commandsPanel.add(button,gc);
+            
+            gc.gridy++;
+            
+        }
+        
+        revalidate();
+        repaint();
+    }
+    
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        Component source = (Component) ae.getSource();
+
+        if (source == doneButton) {
+            doneButtonAction();
+        } else if(source == addBatchButton) {
+            addBatchButtonAction();
+        }else{
+            try{
+                JButton but = (JButton) source;
+                String str = but.getActionCommand();
+                String [] arr = str.split(":");
+                if(arr.length!=2 || arr[0].isEmpty() || arr[1].isEmpty())
+                    return;
+                if(arr[0].compareTo("select")==0)
+                    selectButtonAction(Integer.parseInt(arr[1]));
+                else if(arr[0].compareTo("delete")==0)
+                    deleteButtonAction(Integer.parseInt(arr[1]));
+                else if(arr[0].compareTo("remove")==0)
+                    removeButtonAction(Integer.parseInt(arr[1]));
+                
+            }
+            catch(Exception ex){}
+        }
     }
 
     @Override
-    public void actionPerformed(ActionEvent ae) {
-        Component s = (Component) ae.getSource();
-
-        if (s == doneButton) {
-            this.setVisible(false);
-        }
-        else {
-            this.setVisible(false);
-        }
-    }
-
-    private class BatchModel extends AbstractTableModel {
-
-        private BatchFile[] batchFiles;
-
-        public BatchModel() {
-            batchFiles = DatabaseConn.getBatchFiles();
-        }
-
-        @Override
-        public int getRowCount() {
-            return DatabaseConn.batchFileCount();
-        }
-
-        @Override
-        public int getColumnCount() {
-            return 3;
-        }
-
-        @Override
-        public Object getValueAt(int x, int y) {
-
-            if (y == 0) {
-                return batchFiles[x].Name;
-            } else if (y == 1) {
-                JButton button = new JButton("Details");
-                button.setName(("det_" + ((Integer) batchFiles[x].ID).toString()));
-                button.addActionListener(dialog);
-                return button;
-            } else {
-                JButton button = new JButton("Delete");
-                button.setName(("del_" + ((Integer) batchFiles[x].ID).toString()));
-                return button;
-            }
-        }
-
-        @Override
-        public String getColumnName(int x) {
-            if (x == 0) {
-                return "Name";
-            } else {
-                return "";
-            }
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+        if(visible){
+            selectedFileID = -1;
+            nameTextField.setText("");
+            updateBatches();
+            updateCommands();
         }
     }
 
-    private class CommandsModel extends AbstractTableModel {
-
-        public CommandsModel() {
-        }
-
-        @Override
-        public int getRowCount() {
-            return DatabaseConn.commandsCount(selectedFileID);
-        }
-
-        @Override
-        public int getColumnCount() {
-            return 2;
-        }
-
-        @Override
-        public Object getValueAt(int x, int y) {
-
-            return null;
-        }
-
-        @Override
-        public String getColumnName(int x) {
-            if (x == 0) {
-                return "Comand";
-            } else {
-                return "";
-            }
-        }
+    private void doneButtonAction() {
+        setVisible(false);
     }
 
-    class ButtonRenderer  implements TableCellRenderer {
-
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value,
-                boolean isSelected, boolean hasFocus, int row, int column) {
-            return (Component)value;
-           
+    private void addBatchButtonAction() {
+        String name = nameTextField.getText();
+        if(name==null || name.isEmpty() || name.trim().isEmpty()){
+            JOptionPane.showMessageDialog(this, "Enter a value for the batch file name");
+            return;
         }
+        
+        if(DatabaseConn.batchFileExists(name)){
+            JOptionPane.showMessageDialog(this, "A batch file with the same name already exists.");
+            return;
+        }
+        
+        BatchFile batchFile = new BatchFile(0, name);
+        
+        DatabaseConn.addBatchFile(batchFile);
+        updateBatches();
+        
+        nameTextField.setText("");
     }
+
+    private void selectButtonAction(int batchFileID) {
+        selectedFileID = batchFileID;
+        updateBatches();
+        updateCommands();
+    }
+
+    private void deleteButtonAction(int batchFileID) {
+        DatabaseConn.deleteBatchFile(batchFileID);
+        selectedFileID =-1;
+        updateBatches();
+        updateCommands();
+    }
+
+    private void removeButtonAction(int commandID) {
+        DatabaseConn.deleteCommand(commandID);
+        updateBatches();
+        updateCommands();
+    }
+
 }

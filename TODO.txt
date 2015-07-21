@@ -1,9 +1,22 @@
-1- change the configuration file from the GUI
-2- run the same command on multiple input files
-3- run more than one command at a time 
+1- change the configuration file from the GUI (Done)
+2- run the same command on multiple input files 
+3- run more than one command at a time (Done)
 4- diff between two output files 
 
 
 # Console output ????
 
+solved issues 
+- change batch name (won't change)
+- plugin desc 
+- profile selection changes (low priority)
+- close button 
+- output file name when using batch file
+- put each plugin output in a different file when running batch file 
+- run batch wizard
 
+
+open issues 
+- make it work on linux
+- added option not appearing
+- import & export batch file 

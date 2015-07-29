@@ -188,7 +188,11 @@ public class MainFrame extends JFrame implements ActionListener {
                 }
                 if(!batchFileWizard.isReady()) return;
                 cmd = batchFileWizard.getCommands();
-                for(int i=0;i<cmd.length;i++) cmd[i]= "cmd /c \"" + volCommand + " " + pluginsPanel.getCommand() + " " + cmd[i] + "\"";
+                for(int i=0;i<cmd.length;i++) 
+                {
+                    if(OSType.isWindows()) cmd[i]= "cmd /c \"" + volCommand + " " + pluginsPanel.getCommand() + " " + cmd[i] + "\"";
+                    else cmd[i] = volCommand + " " + pluginsPanel.getCommand() + " " + cmd[i];
+                }
                 if (pluginsPanel.shouldWriteToFile()) {
                     BatchFile batchFile = DatabaseConn.getBatchFile(batchFileID);
                     String [] plugins = batchFileWizard.getPluginNames();
@@ -200,13 +204,17 @@ public class MainFrame extends JFrame implements ActionListener {
                 }
                 
             }
-            else{
+            else {
                 cmd = new String[1];
                 //String cmd = "cmd /c \"" + volCommand + " " + pluginsPanel.getCommand() + " " + optionsPanel.getCommand() + "\"";
-                
-                cmd[0] = "cmd /c \"" + volCommand + " " + pluginsPanel.getCommand() + " ";
-                cmd[0] = cmd[0]+ pluginsPanel.getPluginName() + " " + optionsPanel.getCommand() + "\"";
-                
+                if(OSType.isWindows()) {
+                    cmd[0] = "cmd /c \"" + volCommand + " " + pluginsPanel.getCommand() + " ";
+                    cmd[0] = cmd[0]+ pluginsPanel.getPluginName() + " " + optionsPanel.getCommand() + "\"";
+                }
+                else {
+                    cmd[0] =  volCommand + " " + pluginsPanel.getCommand() + " ";
+                    cmd[0] = cmd[0]+ pluginsPanel.getPluginName() + " " + optionsPanel.getCommand();
+                }
                 if (pluginsPanel.shouldWriteToFile()) {
                     out = new OutputStreamWriter[1];
                     out[0] = getOutputStream(pluginsPanel.getOutputDir(),pluginsPanel.getFileName()+"-"+pluginsPanel.getPluginName()+"-output");

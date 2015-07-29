@@ -30,6 +30,7 @@ public class CommandExecuter implements Runnable {
             comLayer.addToConsole("Running command: "+cmd[i] + "\r\n",id,-1);
             try {
                 p = Runtime.getRuntime().exec(cmd[i]);
+                
                 BufferedReader out = new BufferedReader(new InputStreamReader(p.getInputStream()));
                 BufferedReader err = new BufferedReader(new InputStreamReader(p.getErrorStream()));
                 while(true){
@@ -41,7 +42,8 @@ public class CommandExecuter implements Runnable {
                         comLayer.addToConsole(err.readLine(),id,i);
                     }
                     if(isStopped) {
-                        p.destroyForcibly();
+                        p.destroy();
+                        //p.destroyForcibly();
                         break;
                     }
                     try{
@@ -49,6 +51,7 @@ public class CommandExecuter implements Runnable {
                         break;
                     }
                     catch(Exception e){
+                        System.err.println(e.getMessage());
                     }
                 }
 

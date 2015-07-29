@@ -14,9 +14,10 @@ solved issues
 - output file name when using batch file
 - put each plugin output in a different file when running batch file 
 - run batch wizard
-
+- make it work on linux
 
 open issues 
-- make it work on linux
+
 - added option not appearing
 - import & export batch file 
+- make it work on linux with spaces in command line args

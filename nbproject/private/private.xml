@@ -3,13 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/I:/Reps/GVol/src/database/DatabaseConn.java</file>
-            <file>file:/I:/Reps/GVol/src/main/MainFrame.java</file>
-            <file>file:/I:/Reps/GVol/src/main/CommandExecuter.java</file>
-            <file>file:/I:/Reps/GVol/src/dialog/BatchFileDialog.java</file>
-            <file>file:/I:/Reps/GVol/src/database/Plugin.java</file>
-            <file>file:/I:/Reps/GVol/src/main/PluginsPanel.java</file>
-            <file>file:/I:/Reps/GVol/src/dialog/BatchFileWizardDialog.java</file>
+            <file>file:/mnt/hgfs/Reps/GVol/src/dialog/PluginsDialog.java</file>
+            <file>file:/mnt/hgfs/Reps/GVol/src/main/MainFrame.java</file>
+            <file>file:/mnt/hgfs/Reps/GVol/src/main/OSType.java</file>
+            <file>file:/mnt/hgfs/Reps/GVol/src/main/CommandExecuter.java</file>
+            <file>file:/mnt/hgfs/Reps/GVol/src/main/MFileChooser.java</file>
         </group>
     </open-files>
 </project-private>

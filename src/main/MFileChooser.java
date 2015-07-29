@@ -60,7 +60,10 @@ public class MFileChooser extends JPanel implements ActionListener{
         String filePath = textField.getText();
         if(filePath == null || filePath.isEmpty() || filePath.trim().isEmpty()) 
             return null;
-        else return "\""+filePath+"\"";
+        else{
+            if(OSType.isWindows()) return "\""+filePath+"\"";
+            else return filePath.replace(" ", "\\ ");
+        }
     }
     
     @Override

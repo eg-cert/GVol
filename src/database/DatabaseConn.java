@@ -540,4 +540,17 @@ public class DatabaseConn {
         return false;
     }
 
+    public static void updatePluginDesc(String name, String desc) {
+         String sql = "update plugin set [desc] = '"+desc+"' where name = '"+name.trim()+"';";
+
+        try {
+            Statement stmt = c.createStatement();
+            stmt.executeUpdate(sql);
+
+            stmt.close();
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
 }

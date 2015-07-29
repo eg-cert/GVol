@@ -271,21 +271,29 @@ public class PluginsDialog extends JDialog implements ActionListener{
             JOptionPane.showMessageDialog(this, "Enter a value for plugin name");
             return;
         }
+        boolean isUpdated = false;
+        
         if(DatabaseConn.pluginExists(pluginName)){
-            JOptionPane.showMessageDialog(this, "This plugin already exists");
-            return;
+            String msg = "This plugin exists. Do you want to update description?";
+            if(0 == JOptionPane.showConfirmDialog(this, msg, "Confirm", JOptionPane.YES_NO_OPTION)){
+                DatabaseConn.updatePluginDesc(pluginName,descTextField.getText());
+                isUpdated = true;
+            }
+            
         }
-        String desc = descTextField.getText();
+        else{
+            String desc = descTextField.getText();
+            if(desc == null || desc.isEmpty() || desc.trim().isEmpty()) desc = null;
+            Plugin p = new Plugin(0, pluginName, desc);
+            DatabaseConn.addPlugin(p);
+            isUpdated = true;
+        }
         
-        if(desc == null || desc.isEmpty() || desc.trim().isEmpty()) desc = null;
-        
-        Plugin p = new Plugin(0, pluginName, desc);
-        
-        DatabaseConn.addPlugin(p);
-        
+        if(isUpdated){
         updatePlugins();
         pluginNameTextField.setText("");
         descTextField.setText("");
+        }
     }
 
     private void addOptionButtonAction() {

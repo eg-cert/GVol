@@ -19,8 +19,8 @@ public class OptionsPanel extends JPanel implements ActionListener {
 
     private JComponent[] components;
     private JCheckBox[] checkBoxes;
-    private Option [] options;
-    
+    private Option[] options;
+
     public OptionsPanel() {
         super();
 
@@ -110,13 +110,37 @@ public class OptionsPanel extends JPanel implements ActionListener {
         public void keyReleased(KeyEvent e) {
             JTextField textField = (JTextField) e.getSource();
             String text = textField.getText();
+
+            if (text.length() >= 2 && text.charAt(0) == '0' && text.charAt(1) == 'x') {
+                text = validateHex(text);
+            } else {
+                text = validateDec(text);
+            }
+
+            textField.setText(text);
+        }
+
+        private String validateHex(String text) {
+            String newText = "" + text.charAt(0) + text.charAt(1);
+            for (int i = 2; i < text.length(); i++) {
+                if ((text.charAt(i) <= '9' && text.charAt(i) >= '0')
+                        || (text.charAt(i) <= 'f' && text.charAt(i) >= 'a')
+                        || (text.charAt(i) <= 'F' && text.charAt(i) >= 'A')) {
+
+                    newText = newText + text.charAt(i);
+                }
+            }
+            return newText;
+        }
+
+        private String validateDec(String text) {
             String newText = "";
             for (int i = 0; i < text.length(); i++) {
                 if (text.charAt(i) <= '9' && text.charAt(i) >= '0') {
                     newText = newText + text.charAt(i);
                 }
             }
-            textField.setText(newText);
+            return newText;
         }
 
     }

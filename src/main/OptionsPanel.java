@@ -136,7 +136,8 @@ public class OptionsPanel extends JPanel implements ActionListener {
                         MFileChooser fileChooser = (MFileChooser) components[i];
                         cmd = cmd + " " + options[i].getCmd() + " " + fileChooser.getSelectedFile();
                         break;
-
+                    case NOVALUE:
+                        cmd = cmd + " " + options[i].getCmd();
                 }
             }
         }

@@ -92,14 +92,14 @@ public class MainFrame extends JFrame implements ActionListener {
     private void initPluginsPanel() {
         pluginsPanel = new PluginsPanel(new PluginPanelCom());
         Insets insets = mainPanel.getInsets();
-        pluginsPanel.setBounds(insets.left + 5, insets.top + 5, 500, 450);
+        pluginsPanel.setBounds(insets.left + 5, insets.top + 5, 450, 450);
         mainPanel.add(pluginsPanel);
     }
 
     private void initOptionsPanel() {
         optionsPanel = new OptionsPanel();
         Insets insets = mainPanel.getInsets();
-        optionsPanel.setBounds(insets.left + 510, insets.top + 5, 400, 450);
+        optionsPanel.setBounds(insets.left + 460, insets.top + 5, 450, 450);
         mainPanel.add(optionsPanel);
     }
 

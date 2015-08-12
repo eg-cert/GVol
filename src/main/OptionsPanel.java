@@ -38,7 +38,7 @@ public class OptionsPanel extends JPanel implements ActionListener {
         gc.gridy = -1;
         for (int i = 0; i < options.length; i++) {
             gc.gridx = 0;
-            gc.gridy = gc.gridy++;
+            gc.gridy++;
             gc.fill = GridBagConstraints.NONE;
             gc.anchor = GridBagConstraints.WEST;
             gc.weightx = gc.weighty = 1;
@@ -46,6 +46,7 @@ public class OptionsPanel extends JPanel implements ActionListener {
             initComponents(i);
             add(checkBoxes[i], gc);
             gc.gridx = 1;
+            gc.fill = GridBagConstraints.HORIZONTAL;
             gc.anchor = GridBagConstraints.WEST;
             components[i].setEnabled(false);
             add(components[i], gc);
@@ -56,17 +57,17 @@ public class OptionsPanel extends JPanel implements ActionListener {
     }
 
     private void initComponents(int ind) {
-
-        GridBagConstraints gc = new GridBagConstraints();
         JTextField jField;
         MFileChooser fileChooser;
 
-        checkBoxes[ind] = new JCheckBox(options[ind].getDesc());
+        checkBoxes[ind] = new JCheckBox(String.format("<html><div WIDTH=%d>%s</div><html>", 150, options[ind].getDesc()));
+        checkBoxes[ind].setMaximumSize(new Dimension(200, 0));
         checkBoxes[ind].addActionListener(this);
 
         switch (options[ind].getValueType()) {
             case STRING:
                 jField = new JTextField(14);
+                jField.setPreferredSize(new Dimension(250, 25));
                 components[ind] = jField;
                 break;
             case NUMBER:

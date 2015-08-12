@@ -83,7 +83,7 @@ public class PluginsDialog extends JDialog implements ActionListener{
         
         doneButton.setText("Done");
         doneButton.addActionListener(this);
-        doneButton.setBounds(getInsets().left + 500, getInsets().top + 500, 80, 25);
+        doneButton.setBounds(getInsets().left + 500, getInsets().top + 520, 80, 25);
         add(doneButton);
     }
 
@@ -134,7 +134,7 @@ public class PluginsDialog extends JDialog implements ActionListener{
 
     private void initAddPluginPanel() {
         Insets insets = this.getInsets();
-        addPluginPanel.setBounds(insets.left+5,insets.top+185,590,60);
+        addPluginPanel.setBounds(insets.left+5,insets.top+185,590,80);
         addPluginPanel.setLayout(new FlowLayout());
         addPluginPanel.setBorder(BorderFactory.createTitledBorder("Add new plugin"));
         add(addPluginPanel);
@@ -167,7 +167,7 @@ public class PluginsDialog extends JDialog implements ActionListener{
     
         
         JScrollPane scrollPane = new JScrollPane(optionTable);
-        scrollPane.setBounds(insets.left + 5, insets.top + 250, 590, 175);
+        scrollPane.setBounds(insets.left + 5, insets.top + 270, 590, 175);
         scrollPane.setBorder(BorderFactory.createTitledBorder("Options"));
         add(scrollPane);
 
@@ -176,7 +176,7 @@ public class PluginsDialog extends JDialog implements ActionListener{
 
     private void initAddOptionPanel() {
         Insets insets = this.getInsets();
-        addOptionPanel.setBounds(insets.left+5,insets.top+435,590,60);
+        addOptionPanel.setBounds(insets.left+5,insets.top+455,590,60);
         addOptionPanel.setLayout(new FlowLayout());
         addOptionPanel.setBorder(BorderFactory.createTitledBorder("Add Option to The Selected Plugin"));
         
@@ -254,10 +254,10 @@ public class PluginsDialog extends JDialog implements ActionListener{
         super.setVisible(visible);
         
         if(visible){
-            selectedPluginID = 0;
            // updatePlugins();
             pluginNameTextField.setText("");
-            
+            updateComboBox();
+            updateOptions();
         }
     }
     

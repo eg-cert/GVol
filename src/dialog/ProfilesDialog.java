@@ -75,7 +75,7 @@ public class ProfilesDialog extends JDialog implements ActionListener{
         
         doneButton = new JButton("Done");
         doneButton.addActionListener(this);  
-        doneButton.setBounds(getInsets().left+500, getInsets().top+385, 80, 25);
+        doneButton.setBounds(getInsets().left+500, getInsets().top+405, 80, 25);
         add(doneButton);
     }
 
@@ -123,7 +123,7 @@ public class ProfilesDialog extends JDialog implements ActionListener{
         addProfilePanel.setLayout(new FlowLayout());
         addProfilePanel.setBorder(BorderFactory.createTitledBorder("Add new profile"));
         Insets insets = this.getInsets();
-        addProfilePanel.setBounds(insets.left + 5, insets.top + 320, 590, 60);
+        addProfilePanel.setBounds(insets.left + 5, insets.top + 320, 590, 80);
         add(addProfilePanel);
         
         nameLabel.setText("Profile: ");

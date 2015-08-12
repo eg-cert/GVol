@@ -20,13 +20,13 @@ public class MFileChooser extends JPanel implements ActionListener{
     public MFileChooser(boolean isDirectory){
         super();
         textField = new JTextField(15);
+        textField.setPreferredSize(new Dimension(200,25));
         browseButton = new JButton();
         fileChooser = new JFileChooser();
         
         textField.setEditable(false);
-        textField.setPreferredSize(new Dimension(240,25));
         browseButton.setText("Browse");
-        browseButton.setPreferredSize(new Dimension(80,25));
+        //browseButton.setPreferredSize(new Dimension(70,20));
         browseButton.addActionListener(this);
         if(isDirectory) fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         fileChooser.setApproveButtonText("Select");

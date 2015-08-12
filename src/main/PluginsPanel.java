@@ -77,7 +77,7 @@ class PluginsPanel extends JPanel implements ActionListener {
         };
         pluginsList.setToolTipText("select a plugin");
         batchFilesList = new JComboBox();
-        writeFileBox = new JCheckBox("Write the output to a file.");
+        writeFileBox = new JCheckBox(String.format("<html><div WIDTH=%d>%s</div><html>", 150,"Write the output to a file."));
         runBatchBox = new JCheckBox("Run batch file.");
         outputDirChooser = new MFileChooser(true);
         

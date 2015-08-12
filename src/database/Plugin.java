@@ -26,8 +26,10 @@ public class Plugin {
     }
     
     public String getTooltip(){
-        String tip = ((desc==null)?"":desc);
-        tip = "<html>"+name+"<br>"+tip+"</html>";
+        
+         String tip = "<html>" + name + "<br>";
+         tip = tip + String.format("<html><div WIDTH=%d>%s</div><html>", 400,((desc==null)?"":desc)  + "</html>");
+                    
         return tip;
     }
 }

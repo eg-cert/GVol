@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 import iface.*;
 import dialog.*;
 import database.*;
+import javax.swing.ToolTipManager;
 
 public class MainFrame extends JFrame implements ActionListener {
 
@@ -80,6 +81,8 @@ public class MainFrame extends JFrame implements ActionListener {
         optionsDialog = new OptionsDialog(this);
         pluginsDialog = new PluginsDialog(this);
         profilesDialog = new ProfilesDialog(this);
+        
+        ToolTipManager.sharedInstance().setDismissDelay(600000);
         
         initOptionsPanel();
         initPluginsPanel();

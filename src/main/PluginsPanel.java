@@ -66,8 +66,7 @@ class PluginsPanel extends JPanel implements ActionListener {
                     }
                     Plugin plugin = DatabaseConn.getPlugin(cbi.getID());
 
-                    String tip = "<html>" + plugin.getName() + "<br>" + ((plugin.getDesc()==null)?"":plugin.getDesc())  + "</html>";
-                    return tip;
+                   return plugin.getTooltip();
                 } catch (Exception ex) {
                    // System.err.println("Failed to get ToolTip");
                 }

@@ -106,8 +106,7 @@ public class PluginsDialog extends JDialog implements ActionListener{
                         return null;
                     }
                     Plugin plugin = DatabaseConn.getPlugin(cbi.getID());
-                    tip = "<html>" + plugin.getName() + "<br>" + ((plugin.getDesc()==null)?"":plugin.getDesc()) + "</html>";
-                    return tip;
+                    return plugin.getTooltip();
                 } catch (Exception ex) {
                     return null;
                 }

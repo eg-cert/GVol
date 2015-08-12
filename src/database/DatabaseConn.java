@@ -318,7 +318,7 @@ public class DatabaseConn {
     }
 
     public static void addPlugin(Plugin p) {
-        String sql = "insert into plugin (name,desc) values('" + p.getName() + "','"+p.getDesc()+"');";
+        String sql = "insert into plugin (name,desc) values('" + p.getName() + "','"+p.getDesc().replace("'", "''")+"');";
 
         try {
             Statement stmt = c.createStatement();
@@ -541,8 +541,9 @@ public class DatabaseConn {
     }
 
     public static void updatePluginDesc(String name, String desc) {
-         String sql = "update plugin set [desc] = '"+desc+"' where name = '"+name.trim()+"';";
-
+        desc=desc.replace("'", "''"); 
+        String sql = "update plugin set [desc] = '"+desc+"' where name = '"+name.trim()+"';";
+         
         try {
             Statement stmt = c.createStatement();
             stmt.executeUpdate(sql);

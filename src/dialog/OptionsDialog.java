@@ -115,6 +115,8 @@ public class OptionsDialog extends JDialog implements ActionListener {
         add(addOptionPanel);
 
         nameLabel.setText("Option: ");
+        nameTextField.setToolTipText("<html> If the options needs an equal sign, add the equal sign."
+                + "<br /> For example \"output=\"</html>");
         typeLabel.setText("Type: ");
         descLabel.setText("Description: ");
 

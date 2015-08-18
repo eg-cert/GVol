@@ -88,6 +88,7 @@ public class ProfilesDialog extends JDialog implements ActionListener{
         
         volLabel.setText("Volatility Command: ");
         volTextField.setText(DatabaseConn.getVolCommand());
+        volTextField.setToolTipText("The path shouldn't contain spaces on linux.");
         updateCmdButton.setText("Apply Changes");
         updateCmdButton.addActionListener(this);
         cmdPanel.add(volLabel);

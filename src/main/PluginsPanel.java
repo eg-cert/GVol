@@ -186,13 +186,18 @@ class PluginsPanel extends JPanel implements ActionListener {
      * @return the first part of the command which contains the input file
      * and the profile
      */
-    public String getCommand(){
+    
+    public String []  getCommand(){
         //input image 
-        String cmd = "-f "+inputFileChooser.getSelectedFile()+" ";
+        String [] cmd = new String[4];
+        cmd[0] = "-f ";
+        cmd[1] = inputFileChooser.getSelectedFile();
+        
         //profile
         ComboBoxItem cbi = (ComboBoxItem) profilesList.getSelectedItem();
         Profile p = DatabaseConn.getProfile(cbi.getID());
-        cmd = cmd + "--profile=" + p.getName();    
+        cmd[2] = "--profile=";
+        cmd[3] = p.getName();    
         return cmd;
     }
     

@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import database.*;
+import java.util.ArrayList;
 
 public class OptionsPanel extends JPanel implements ActionListener {
 
@@ -146,26 +147,30 @@ public class OptionsPanel extends JPanel implements ActionListener {
 
     }
 
-    public String getCommand() {
-        String cmd = "";
+    public String [] getCommand() {
+        
+        ArrayList <String> str = new ArrayList<String>();
+        
         for (int i = 0; i < checkBoxes.length; i++) {
             if (checkBoxes[i].isSelected()) {
+                str.add(options[i].getCmd());
                 switch (options[i].getValueType()) {
                     case STRING:
                     case NUMBER:
                         JTextField jField = (JTextField) components[i];
-                        cmd = cmd + " " + options[i].getCmd() + " " + jField.getText();
+                        str.add(jField.getText());
                         break;
                     case FILE:
                     case DIRECTORY:
                         MFileChooser fileChooser = (MFileChooser) components[i];
-                        cmd = cmd + " " + options[i].getCmd() + " " + fileChooser.getSelectedFile();
+                        str.add(fileChooser.getSelectedFile());
                         break;
-                    case NOVALUE:
-                        cmd = cmd + " " + options[i].getCmd();
                 }
             }
         }
+        String [] cmd = new String[str.size()];
+        for(int i=0;i<str.size();i++)
+            cmd[i] = str.get(i);
         return cmd;
     }
 

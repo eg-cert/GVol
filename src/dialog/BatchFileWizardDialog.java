@@ -25,7 +25,7 @@ public class BatchFileWizardDialog extends JDialog implements ActionListener {
     final private JLabel stepLabel;
     final private JLabel pluginLabel;
     final private JPanel infoPanel;
-    final private String [] cmd;
+    final private String [] [] cmd;
     final private Plugin [] plugins;
     private boolean isReady;
     private int iterator;
@@ -43,7 +43,7 @@ public class BatchFileWizardDialog extends JDialog implements ActionListener {
         
         pluginLabel = new JLabel();
         infoPanel = new JPanel();
-        cmd = new String[DatabaseConn.batchFilePluginCount(batchFileID)];
+        cmd = new String[DatabaseConn.batchFilePluginCount(batchFileID)][];
         plugins = DatabaseConn.getBatchFilePlugins(batchFileID);
         iterator = 0;
         isReady = false;
@@ -59,7 +59,7 @@ public class BatchFileWizardDialog extends JDialog implements ActionListener {
         return res;
     }
     
-    public String [] getCommands(){
+    public String [][] getCommands(){
         return cmd;
     }
     
@@ -103,7 +103,10 @@ public class BatchFileWizardDialog extends JDialog implements ActionListener {
             JOptionPane.showMessageDialog(this, "you must enter values for all selected options.");
             return;
         }
-        cmd[iterator] = plugins[iterator].getName() + " " +optionsPanel.getCommand();
+        String [] opCmd = optionsPanel.getCommand();
+        cmd[iterator] = new String[1+opCmd.length];
+        cmd[iterator][0] = plugins[iterator].getName();
+        for(int i=1;i<=opCmd.length;i++) cmd[iterator][i] = opCmd[i-1];
         iterator = iterator + 1;
         if(iterator == plugins.length){
             isReady = true;

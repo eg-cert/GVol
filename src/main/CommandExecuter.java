@@ -9,10 +9,10 @@ import iface.*;
 public class CommandExecuter implements Runnable {
     
     private final ComLayerWithThread comLayer;
-    private final String [] cmd;
+    private final String [][] cmd;
     private volatile boolean isStopped;
     private final int id;
-    public CommandExecuter(String [] cmd, ComLayerWithThread comLayer,int id){
+    public CommandExecuter(String [][] cmd, ComLayerWithThread comLayer,int id){
         this.cmd = cmd;
         this.comLayer = comLayer;
         this.id = id;
@@ -27,7 +27,9 @@ public class CommandExecuter implements Runnable {
         comLayer.addToConsole("Execution Started at: "+ timeStamp+"\r\n\r\n", id,-1);
         for(int i=0;i<cmd.length;i++){
             if(isStopped) break;
-            comLayer.addToConsole("Running command: "+cmd[i] + "\r\n",id,-1);
+            String cmdString = "";
+            for(int j=0;j<cmd[i].length;j++) cmdString = cmdString + " " +cmd[i][j];
+            comLayer.addToConsole("Running command: "+cmdString + "\r\n",id,-1);
             try {
                 p = Runtime.getRuntime().exec(cmd[i]);
                 

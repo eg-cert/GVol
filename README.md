@@ -4,10 +4,10 @@ GVol is a lightweight GUI application built in Java designed to automate the usa
 
 <H2>Configuration</H2>
 
-Download the latest version from Downloads. You need the java runtime enviroment to run GVol. Run the file GVol.jar.
+Download the latest version from releases. You need the java runtime enviroment to run GVol. Run the file GVol.jar.
 <br />
 The first time you run GVol, you should tell it how to run Volatility. <br />
 1- Menu bar > Configuration > Cmd & profiles <br />
 2- Enter the command to run volatility in your system like "python vol.py" or the path of the standalone executable if you use it. <br />
 
-For more details about the tool and how to use it, download the users guide from the downloads section.
+For more details about the tool and how to use it, read the user guide.

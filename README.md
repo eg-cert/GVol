@@ -15,8 +15,8 @@ ant
 the target jar file shall be under the dist directory
 
 <H2>Running</H2>
-```java -jar GVol.jar
-
+```
+java -jar GVol.jar
 ```
 
 

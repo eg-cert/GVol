@@ -9,7 +9,6 @@ Building should be as simple as
 ```
 cd GVol
 ant
-
 ```
 <br />
 the target jar file shall be under the dist directory

@@ -6,9 +6,11 @@ GVol is a lightweight GUI application built in Java designed to automate the usa
 <H2>Building</H2>
 Building should be as simple as
 
-```cd GVol
+```
+cd GVol
 
 ant
+
 ```
 <br />
 the target jar file shall be under the dist directory

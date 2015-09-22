@@ -113,6 +113,8 @@ public class BatchFileWizardDialog extends JDialog implements ActionListener {
             setVisible(false);
         }
         else changePlugin(iterator);
+        revalidate();
+        repaint();
     }
 
     private void cancelButtonAction() {

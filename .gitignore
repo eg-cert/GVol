@@ -1,6 +1,6 @@
 *.exe
-dist\
-build\
+dist/
+build/
 
 #netbeans specific
 core

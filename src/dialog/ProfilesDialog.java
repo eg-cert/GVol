@@ -88,7 +88,7 @@ public class ProfilesDialog extends JDialog implements ActionListener{
         
         volLabel.setText("Volatility Command: ");
         volTextField.setText(DatabaseConn.getVolCommand());
-        volTextField.setToolTipText("The path shouldn't contain spaces on linux.");
+        //volTextField.setToolTipText("The path shouldn't contain spaces on linux.");
         updateCmdButton.setText("Apply Changes");
         updateCmdButton.addActionListener(this);
         cmdPanel.add(volLabel);
@@ -190,7 +190,7 @@ public class ProfilesDialog extends JDialog implements ActionListener{
         {
             JOptionPane.showMessageDialog(this, "Invalid Command");
         }
-        else DatabaseConn.setVolCommand(newCmd);
+        else DatabaseConn.setVolCommand(newCmd.trim());
     }
 
     private void doneButtonAction() {

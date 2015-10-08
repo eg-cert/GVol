@@ -114,7 +114,7 @@ public class DatabaseConn {
             }
             stmt.close();
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            System.err.println(ex.getMessage());
         }
         return profiles;
     }
@@ -133,7 +133,7 @@ public class DatabaseConn {
             }
             stmt.close();
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            System.err.println(ex.getMessage());
         }
         return volCommand;
 
@@ -160,7 +160,7 @@ public class DatabaseConn {
             }
             stmt.close();
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            System.err.println(ex.getMessage());
         }
         return options;
     }
@@ -186,7 +186,7 @@ public class DatabaseConn {
             }
             stmt.close();
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            System.err.println(ex.getMessage());
         }
         return option;
     }
@@ -208,7 +208,7 @@ public class DatabaseConn {
             }
             stmt.close();
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            System.err.println(ex.getMessage());
         }
         return options;
     }
@@ -230,7 +230,7 @@ public class DatabaseConn {
             }
             stmt.close();
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            System.err.println(ex.getMessage());
         }
         return plugins;
     }
@@ -253,7 +253,7 @@ public class DatabaseConn {
             }
             stmt.close();
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            System.err.println(ex.getMessage());
         }
         return plugins;
     }
@@ -287,7 +287,7 @@ public class DatabaseConn {
             stmt.executeUpdate(sql);
             stmt.close();
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            System.err.println(ex.getMessage());
         }
     }
 
@@ -300,7 +300,7 @@ public class DatabaseConn {
 
             stmt.close();
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            System.err.println(ex.getMessage());
         }
     }
 
@@ -313,7 +313,7 @@ public class DatabaseConn {
 
             stmt.close();
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            System.err.println(ex.getMessage());
         }
     }
 
@@ -326,7 +326,7 @@ public class DatabaseConn {
 
             stmt.close();
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            System.err.println(ex.getMessage());
         }
     }
 
@@ -339,7 +339,7 @@ public class DatabaseConn {
 
             stmt.close();
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            System.err.println(ex.getMessage());
         }
     }
 
@@ -351,7 +351,7 @@ public class DatabaseConn {
 
             stmt.close();
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            System.err.println(ex.getMessage());
         }
     }
     
@@ -364,7 +364,7 @@ public class DatabaseConn {
 
             stmt.close();
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            System.err.println(ex.getMessage());
         }
     }
     
@@ -376,7 +376,7 @@ public class DatabaseConn {
 
             stmt.close();
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            System.err.println(ex.getMessage());
         }
     }
 
@@ -388,7 +388,7 @@ public class DatabaseConn {
 
             stmt.close();
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            System.err.println(ex.getMessage());
         }
     }
 
@@ -404,7 +404,7 @@ public class DatabaseConn {
 
                 stmt.close();
             } catch (Exception ex) {
-                System.out.println("delete Plugin: " + ex.getMessage());
+                System.err.println("delete Plugin: " + ex.getMessage());
             }
         }
     }
@@ -419,7 +419,7 @@ public class DatabaseConn {
 
             stmt.close();
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            System.err.println(ex.getMessage());
         }
     }
     
@@ -434,7 +434,7 @@ public class DatabaseConn {
 
                 stmt.close();
             } catch (Exception ex) {
-                System.out.println(ex.getMessage());
+                System.err.println(ex.getMessage());
             }
         }
     }
@@ -448,7 +448,7 @@ public class DatabaseConn {
             stmt.executeUpdate(sql);
             stmt.close();
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            System.err.println(ex.getMessage());
         }
     }
      
@@ -459,7 +459,7 @@ public class DatabaseConn {
             ResultSet rs = stmt.executeQuery(sql);
             return rs.next();
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            System.err.println(ex.getMessage());
         }
         return false;
     }
@@ -471,7 +471,7 @@ public class DatabaseConn {
             ResultSet rs = stmt.executeQuery(sql);
             return rs.next();
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            System.err.println(ex.getMessage());
         }
         return false;
     }
@@ -485,7 +485,7 @@ public class DatabaseConn {
             ResultSet rs = stmt.executeQuery(sql);
             return rs.next();
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            System.err.println(ex.getMessage());
         }
         return false;
     }
@@ -497,7 +497,7 @@ public class DatabaseConn {
             ResultSet rs = stmt.executeQuery(sql);
             return rs.next();
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            System.err.println(ex.getMessage());
         }
         return false;
     }
@@ -509,7 +509,7 @@ public class DatabaseConn {
             ResultSet rs = stmt.executeQuery(sql);
             return rs.next();
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            System.err.println(ex.getMessage());
         }
         return false;
     }
@@ -523,7 +523,7 @@ public class DatabaseConn {
             ResultSet rs = stmt.executeQuery(sql);
             return rs.next();
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            System.err.println(ex.getMessage());
         }
         return false;
     }
@@ -535,7 +535,7 @@ public class DatabaseConn {
             ResultSet rs = stmt.executeQuery(sql);
             return rs.next();
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            System.err.println(ex.getMessage());
         }
         return false;
     }
@@ -550,7 +550,7 @@ public class DatabaseConn {
 
             stmt.close();
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            System.err.println(ex.getMessage());
         }
     }
 

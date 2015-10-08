@@ -1,21 +1,27 @@
 package main;
 
+import diff.JDiff;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import iface.*;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class CommandExecuter implements Runnable {
     
     private final ComLayerWithThread comLayer;
     private final String [][] cmd;
+    private final String [][] diff;
     private volatile boolean isStopped;
     private final int id;
-    public CommandExecuter(String [][] cmd, ComLayerWithThread comLayer,int id){
+    public CommandExecuter(String [][] cmd, ComLayerWithThread comLayer,int id, String [][] diff){
         this.cmd = cmd;
         this.comLayer = comLayer;
         this.id = id;
+        this.diff = diff;
     }
     
     @Override
@@ -32,7 +38,7 @@ public class CommandExecuter implements Runnable {
             comLayer.addToConsole("Running command: "+cmdString + "\r\n",id,-1);
             try {
                 p = Runtime.getRuntime().exec(cmd[i]);
-                
+                //p = Runtime.getRuntime().exec(cmdString);
                 BufferedReader out = new BufferedReader(new InputStreamReader(p.getInputStream()));
                 BufferedReader err = new BufferedReader(new InputStreamReader(p.getErrorStream()));
                 while(true){
@@ -60,14 +66,18 @@ public class CommandExecuter implements Runnable {
             } catch (Exception ex) {
                 System.err.println(ex.getMessage());
             }
-           
         }
+        
+        comLayer.threadClosed(id);
+        runDiff(diff);
+        
+        
         end = System.currentTimeMillis()/1000;
         end -= st;
         timeStamp = new SimpleDateFormat("HH:mm:ss").format(Calendar.getInstance().getTime());
         comLayer.addToConsole("\r\n\r\nExecution ended at: "+timeStamp, id, -1);
         comLayer.addToConsole("Elapsed time: "+end+" sec.", id, -1);
-        comLayer.threadClosed(id);
+        
         isStopped = true;
         
     }
@@ -78,5 +88,18 @@ public class CommandExecuter implements Runnable {
     
     public boolean isRunning(){
         return !isStopped;
+    }
+
+    private void runDiff(String[][] diff) {
+        if(diff == null) return;
+        comLayer.addToConsole("\r\nRunning diff ", id, -1);
+        for(int i=0;i<diff.length;i++){
+            try {
+                JDiff jDiff = new JDiff(diff[i][0], diff[i][1]);
+                jDiff.getFormattedOutput(diff[i][1]+".diff.html");
+            } catch (Exception ex) {
+                System.err.println("Failed to diff");
+            }
+        }
     }
 }

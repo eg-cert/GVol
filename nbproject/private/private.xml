@@ -2,6 +2,14 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/Users/User/Documents/NetBeansProjects/GVol/src/dialog/PluginsDialog.java</file>
+            <file>file:/C:/Users/User/Documents/NetBeansProjects/GVol/src/main/PluginsPanel.java</file>
+            <file>file:/C:/Users/User/Documents/NetBeansProjects/GVol/src/dialog/OptionsDialog.java</file>
+            <file>file:/C:/Users/User/Documents/NetBeansProjects/GVol/src/main/CommandExecuter.java</file>
+            <file>file:/C:/Users/User/Documents/NetBeansProjects/GVol/src/main/MFileChooser.java</file>
+            <file>file:/C:/Users/User/Documents/NetBeansProjects/GVol/src/diff/JDiff.java</file>
+            <file>file:/C:/Users/User/Documents/NetBeansProjects/GVol/src/main/MainFrame.java</file>
+        </group>
     </open-files>
 </project-private>

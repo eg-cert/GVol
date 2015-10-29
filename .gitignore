@@ -1,4 +1,6 @@
 *.exe
+*.db
+*.jar
 dist/
 build/
 
@@ -19,3 +21,5 @@ nbproject/
 *.swp
 *.DS_Store
 *.lock
+
+*.jar

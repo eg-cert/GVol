@@ -6,9 +6,19 @@ public class Line {
     private int index;
     private boolean removed;
     final private String txt;
+    private int modified;
     
     public Line(String txt){
         this.txt = txt ;
+        this.modified = -1;
+    }
+    
+    public int getModified(){
+        return modified;
+    }
+    
+    public void setModified(int m){
+        modified = m;
     }
     
     public boolean getRemoved(){

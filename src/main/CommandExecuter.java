@@ -6,9 +6,6 @@ import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import iface.*;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class CommandExecuter implements Runnable {
     
@@ -96,7 +93,7 @@ public class CommandExecuter implements Runnable {
         for(int i=0;i<diff.length;i++){
             try {
                 JDiff jDiff = new JDiff(diff[i][0], diff[i][1]);
-                jDiff.getFormattedOutput(diff[i][1]+".diff.html");
+                jDiff.getFormattedOutputSep(diff[i][1]+".diff.html");
             } catch (Exception ex) {
                 System.err.println("Failed to diff");
             }

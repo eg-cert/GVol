@@ -318,7 +318,7 @@ public class BatchFileDialog extends JDialog implements ActionListener {
                     selectedFileID = 0;
                 }
                 
-                //System.out.println("current first = " + first + " last = "+last +" selected id = "+ selectedPluginID);
+                //System.err.println("current first = " + first + " last = "+last +" selected id = "+ selectedPluginID);
                 updatePlugins();
             }
         }

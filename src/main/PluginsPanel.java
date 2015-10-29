@@ -17,6 +17,7 @@ import java.awt.event.MouseEvent;
 class PluginsPanel extends JPanel implements ActionListener {
 
     private final JLabel imageLabel;
+    private final JLabel image2Label;
     private final JLabel profileLabel;
     private final JLabel pluginLabel;
     private final JLabel outputDirLabel;
@@ -33,6 +34,7 @@ class PluginsPanel extends JPanel implements ActionListener {
     private BatchFile [] batchFiles;
     
     private final MFileChooser inputFileChooser;
+    private final MFileChooser inputFile2Chooser;
     private final MFileChooser outputDirChooser;
     
     private final JCheckBox writeFileBox;
@@ -44,15 +46,16 @@ class PluginsPanel extends JPanel implements ActionListener {
         super();
         setBorder(BorderFactory.createTitledBorder("Plugins"));
 
-        
         this.comLayer = comLayer;
         imageLabel = new JLabel();
+        image2Label = new JLabel();
         profileLabel = new JLabel();
         pluginLabel = new JLabel();
         outputDirLabel = new JLabel();
         batchFileLabel = new JLabel();
         
         inputFileChooser = new MFileChooser(false);
+        inputFile2Chooser = new MFileChooser(false);
         executeButton = new JButton();
         profilesList = new JComboBox();
         pluginsList = new JComboBox() {
@@ -86,6 +89,7 @@ class PluginsPanel extends JPanel implements ActionListener {
     private void initComponents() {
         
         imageLabel.setText("Memory image: ");
+        image2Label.setText("Diff with this image: ");
         profileLabel.setText("Profile: ");
         pluginLabel.setText("Plugin: ");
         outputDirLabel.setText("Choose output directory: ");
@@ -109,6 +113,8 @@ class PluginsPanel extends JPanel implements ActionListener {
         //labels column
         add(imageLabel,gc);
         gc.gridy++;
+        add(image2Label,gc);
+        gc.gridy++;
         add(profileLabel,gc);
         gc.gridy++;
         add(pluginLabel,gc);
@@ -124,6 +130,8 @@ class PluginsPanel extends JPanel implements ActionListener {
         gc.gridx=1;
         
         add(inputFileChooser,gc);
+        gc.gridy++;
+        add(inputFile2Chooser,gc);
         gc.gridy++;
         add(profilesList,gc);
         gc.gridy++;
@@ -173,7 +181,11 @@ class PluginsPanel extends JPanel implements ActionListener {
         txt = inputFileChooser.getSelectedFile();
         if(txt==null || txt.isEmpty() || txt.trim().isEmpty())
             return false;
-
+        
+        txt = inputFile2Chooser.getSelectedFile();
+        if(txt!=null && !txt.trim().isEmpty() && !writeFileBox.isSelected()){
+            return false;
+        }
         if(writeFileBox.isSelected()){
             txt = outputDirChooser.getSelectedFile();
             if(txt==null || txt.isEmpty() || txt.trim().isEmpty())
@@ -187,18 +199,22 @@ class PluginsPanel extends JPanel implements ActionListener {
      * and the profile
      */
     
-    public String []  getCommand(){
+    public String []  getCommand(int ind){
         //input image 
-        String [] cmd = new String[4];
-        cmd[0] = "-f ";
-        cmd[1] = inputFileChooser.getSelectedFile();
-        
+        String [] cmd = new String[3];
+        cmd[0] = "-f";
+        if(ind ==0) cmd[1] = inputFileChooser.getSelectedFile();
+        else cmd[1] = inputFile2Chooser.getSelectedFile();
         //profile
         ComboBoxItem cbi = (ComboBoxItem) profilesList.getSelectedItem();
         Profile p = DatabaseConn.getProfile(cbi.getID());
-        cmd[2] = "--profile=";
-        cmd[3] = p.getName();    
+        cmd[2] = "--profile="+p.getName();    
         return cmd;
+    }
+    
+    public boolean shouldRunDiff(){
+        String txt = inputFile2Chooser.getSelectedFile();
+        return !(txt == null || txt.isEmpty() || txt.trim().isEmpty());
     }
     
     public boolean shouldWriteToFile(){
@@ -221,14 +237,15 @@ class PluginsPanel extends JPanel implements ActionListener {
         return pl.getName();
     }
     
-    public String getFileName(){
-        return inputFileChooser.getFileName();
+    public String getFileName(int ind){
+        if(ind==0) return inputFileChooser.getFileName();
+        else return  inputFile2Chooser.getFileName();
     }
     
     public String getOutputDir(){
         String str = outputDirChooser.getSelectedFile();
-        if(str!=null){
-            str = str.substring(1,str.length()-1);
+        if(str!=null && str.charAt(str.length()-1)=='/' || str.charAt(str.length()-1)=='\\'){
+            str = str.substring(0,str.length()-1);
         }
         return str;
     }

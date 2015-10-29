@@ -343,7 +343,7 @@ public class PluginsDialog extends JDialog implements ActionListener{
             
             if (!e.getValueIsAdjusting()) {
                 int row = pluginTable.getSelectedRow();
-               // System.out.println("current row = " + row);
+               // System.err.println("current row = " + row);
                 if(row>=0 && row<pluginTable.getRowCount()){
                     ComboBoxItem cbi = (ComboBoxItem) pluginTable.getModel().getValueAt(row, 0);
                     selectedPluginID = cbi.getID();
@@ -352,7 +352,7 @@ public class PluginsDialog extends JDialog implements ActionListener{
                     selectedPluginID = 0;
                 }
                 
-                //System.out.println("current first = " + first + " last = "+last +" selected id = "+ selectedPluginID);
+                //System.err.println("current first = " + first + " last = "+last +" selected id = "+ selectedPluginID);
                 updateOptions();
             }
         }

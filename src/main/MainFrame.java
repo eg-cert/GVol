@@ -23,7 +23,7 @@ import javax.swing.ToolTipManager;
 
 public class MainFrame extends JFrame implements ActionListener {
 
-    private String volCommand;
+    private String [] volCommand;
     private final ArrayList<CommandExecuter> commandExecuter;
     private final ArrayList<OutputStreamWriter[]> outputFiles;
     private int ids;
@@ -50,7 +50,7 @@ public class MainFrame extends JFrame implements ActionListener {
 
     public MainFrame() {
         super("GVol - A GUI for Volatility Memory Forensics Framework");
-        this.volCommand = DatabaseConn.getVolCommand();
+        this.volCommand = updateVolCommand();//DatabaseConn.getVolCommand();
 
         this.ids = 0;
         this.commandExecuter = new ArrayList<CommandExecuter>();
@@ -158,7 +158,32 @@ public class MainFrame extends JFrame implements ActionListener {
             pluginsDialog.setVisible(true);
         }
         pluginsPanel.updateComponents();
-        volCommand = DatabaseConn.getVolCommand();
+        volCommand = updateVolCommand();
+    }
+
+    private String[] updateVolCommand() {
+        String [] newCmd = null;
+        String cmd = DatabaseConn.getVolCommand();
+        if(cmd.length()>7){
+            String st  = cmd.substring(0, 7);
+            st = st.toLowerCase();
+            File f = new File(cmd);
+            
+            if(st.compareTo("python ")==0 && !f.exists()){
+                newCmd = new String[2];
+                newCmd[0] = "python";
+                newCmd[1] = cmd.substring(7);
+            }
+            else{
+                newCmd = new String[1];
+                newCmd[0] = cmd;
+            }
+        }
+        else{
+            newCmd = new String[1];
+            newCmd[0] = cmd;
+        }
+        return newCmd;
     }
 
     class PluginPanelCom implements ComLayerWithPluginPanel {
@@ -169,7 +194,9 @@ public class MainFrame extends JFrame implements ActionListener {
                 showMessage("you must enter values for all selected options.");
                 return;
             } else if (!pluginsPanel.hasValidValues()) {
-                showMessage("you must specify an input image file or output directory.");
+                String msg = "you must specify an input image file or output directory.\n";
+                msg += "If you selected a second memory image, you have to choose an output directory.";
+                showMessage(msg);
                 return;
             } else if (pluginsPanel.runBatchFile() > 0 && DatabaseConn.batchFilePluginCount(pluginsPanel.runBatchFile()) < 1) {
                 showMessage("this batch file has no commands.");
@@ -195,7 +222,7 @@ public class MainFrame extends JFrame implements ActionListener {
 
         }
 
-        private OutputStreamWriter getOutputStream(String dir, String name) {
+        private String getNewFileName(String dir, String name){
             try {
                 String fPath = dir + File.separator + name;
                 Integer i = 0;
@@ -203,9 +230,18 @@ public class MainFrame extends JFrame implements ActionListener {
                     i++;
                 }
                 fPath = fPath + i.toString() + ".txt";
-                OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(fPath));
+                return fPath;
+            } catch (Exception ex) {
+                return null;
+            }
+        }
+        
+        private OutputStreamWriter getOutputStream(String filePath) {
+            try {
+                OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(filePath));
                 return out;
             } catch (Exception ex) {
+                System.err.println("failed to getOutputStream fpath = "+filePath);
                 return null;
             }
         }
@@ -214,27 +250,49 @@ public class MainFrame extends JFrame implements ActionListener {
            
             OutputStreamWriter[] out = null;
             
-            String [] pluginCommands = pluginsPanel.getCommand();
-            String [] optionCommands = optionsPanel.getCommand();
-            
-            String [][] cmd = new String[1][2+pluginCommands.length+optionCommands.length];
-            cmd[0][0] = volCommand;
-            for(int i = 1;i<=pluginCommands.length;i++) cmd[0][i] = pluginCommands[i-1];
-            cmd[0][1+pluginCommands.length] = pluginsPanel.getPluginName();
-            for(int i=1;i<=optionCommands.length;i++) cmd[0][i+pluginCommands.length+1] = optionCommands[i-1];
-            
-            if (pluginsPanel.shouldWriteToFile()) {
+            int count;
+            String [][] diff = null;
+            if(pluginsPanel.shouldWriteToFile()){
                 out = new OutputStreamWriter[1];
-                out[0] = getOutputStream(pluginsPanel.getOutputDir(), pluginsPanel.getFileName() + "-" + pluginsPanel.getPluginName() + "-output");
+            }
+            if(pluginsPanel.shouldRunDiff()){
+                count = 2;
+                diff = new String[1][2];
+                out = new OutputStreamWriter[2];
+            }
+            else count=1;
+            
+            String [][] cmd = new String[count][];//[1+volCommand.length+pluginCommands.length+optionCommands.length];
+            
+            for(int j=0;j<count;j++){
+                String [] pluginCommands = pluginsPanel.getCommand(j);
+                String [] optionCommands = optionsPanel.getCommand();
+                cmd[j] = new String[1+volCommand.length+pluginCommands.length+optionCommands.length];
+                int prev =0;
+                for(int i = 0;i<volCommand.length;i++) cmd[j][i] = volCommand[i];
+                prev += volCommand.length;
+                for(int i = 0;i<pluginCommands.length;i++) cmd[j][i + prev] = pluginCommands[i];
+                prev += pluginCommands.length;
+                cmd[j][prev++] = pluginsPanel.getPluginName();
+                for(int i=0;i<optionCommands.length;i++) cmd[j][i+prev] = optionCommands[i];
+
+                if (pluginsPanel.shouldWriteToFile()) {
+                    String filePath = getNewFileName(pluginsPanel.getOutputDir(), pluginsPanel.getFileName(j) + "-" + pluginsPanel.getPluginName() + "-output");
+                    out[j] = getOutputStream(filePath);
+                    if(pluginsPanel.shouldRunDiff()){
+                        diff[0][j] = filePath;
+                    }
+                }
             }
             outputPanel.addNewTextArea();
             outputFiles.add(out);
-            commandExecuter.add(new CommandExecuter(cmd, new CommandExecuterCom(), ids++));
+            commandExecuter.add(new CommandExecuter(cmd, new CommandExecuterCom(), ids++,diff));
 
         }
 
         private boolean runBatchFile() {
             String[][] cmd = null;
+            String[][] diff = null;
             OutputStreamWriter[] out = null;
 
             int batchFileID = pluginsPanel.runBatchFile();
@@ -249,30 +307,52 @@ public class MainFrame extends JFrame implements ActionListener {
             if (!batchFileWizard.isReady()) {
                 return false;
             }
+            
+            int count;
             String [][] str = batchFileWizard.getCommands();
             cmd = new String[str.length][];
-            for (int i = 0; i < cmd.length; i++) {
-                String [] pluginCommands = pluginsPanel.getCommand();
-                String [] optionCommands = str[i];
+            if(pluginsPanel.shouldWriteToFile())
+                out = new OutputStreamWriter[str.length];
             
-                cmd[i] = new String[1+pluginCommands.length+optionCommands.length];
-                cmd[i][0] = volCommand;
-                for(int j = 1;j<=pluginCommands.length;j++) cmd[i][j] = pluginCommands[j-1];
-                for(int j=1;j<=optionCommands.length;j++) cmd[i][j+pluginCommands.length] = optionCommands[j-1];
+            if(pluginsPanel.shouldRunDiff()){
+                count = 2;
+                diff = new String[str.length][2];
+                cmd = new String[str.length*2][];
+                
+                out = new OutputStreamWriter[str.length*2];
             }
+            else count=1;
             
-            if (pluginsPanel.shouldWriteToFile()) {
-                BatchFile batchFile = DatabaseConn.getBatchFile(batchFileID);
-                String[] plugins = batchFileWizard.getPluginNames();
-                out = new OutputStreamWriter[plugins.length];
-                for (int i = 0; i < out.length; i++) {
-                    out[i] = getOutputStream(pluginsPanel.getOutputDir(), pluginsPanel.getFileName() + "-" + batchFile.getName()
-                            + "-" + plugins[i] + "-output");
+            
+            for(int k=0;k<count;k++){
+                for (int i = 0; i < str.length; i++) {
+                    String [] pluginCommands = pluginsPanel.getCommand(k);
+                    String [] optionCommands = str[i];
+
+                    cmd[i+(k*str.length)] = new String[volCommand.length + pluginCommands.length+optionCommands.length];
+                    int prev = 0;
+                    for(int j=0;j<volCommand.length;j++) cmd[i+(k*str.length)][j] = volCommand[j];
+                    prev+=volCommand.length;
+                    for(int j = 0;j<pluginCommands.length;j++) cmd[i+(k*str.length)][j+prev] = pluginCommands[j];
+                    prev+=pluginCommands.length;
+                    for(int j=0;j<optionCommands.length;j++) cmd[i+(k*str.length)][j+prev] = optionCommands[j];
+                
+
+                    if (pluginsPanel.shouldWriteToFile()) {
+                        BatchFile batchFile = DatabaseConn.getBatchFile(batchFileID);
+                        String[] plugins = batchFileWizard.getPluginNames();
+                        String filePath = getNewFileName(pluginsPanel.getOutputDir(), pluginsPanel.getFileName(k) + "-" + batchFile.getName()
+                                + "-" + plugins[i] + "-output");
+                        out[i+(k*str.length)] = getOutputStream(filePath);
+                        if(pluginsPanel.shouldRunDiff()){
+                            diff[i][k] = filePath;
+                        }
+                    }
                 }
             }
             outputPanel.addNewTextArea();
             outputFiles.add(out);
-            commandExecuter.add(new CommandExecuter(cmd, new CommandExecuterCom(), ids++));
+            commandExecuter.add(new CommandExecuter(cmd, new CommandExecuterCom(), ids++,diff));
             
             return true;
         }
@@ -289,7 +369,7 @@ public class MainFrame extends JFrame implements ActionListener {
                 try {
                     outputFiles.get(id)[ind].write(line + "\r\n");
                 } catch (Exception e) {
-                    System.out.println(e.getMessage());
+                    System.err.println(e.getMessage());
                 }
             }
         }
@@ -299,6 +379,7 @@ public class MainFrame extends JFrame implements ActionListener {
             try {
                 OutputStreamWriter[] osw = outputFiles.get(id);
                 for (OutputStreamWriter o : osw) {
+                    o.flush();
                     o.close();
                 }
             } catch (Exception ex) {
@@ -341,7 +422,7 @@ public class MainFrame extends JFrame implements ActionListener {
         public void windowClosing(java.awt.event.WindowEvent windowEvent) {
             if (commandsRunning()) {
                 if (confirmClose()) {
-                    //System.out.print("YES");
+                    //System.err.print("YES");
                     System.exit(0);
                 }
             } else {
